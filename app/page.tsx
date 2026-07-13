@@ -1,5 +1,11 @@
-import { AddBookForm } from '@/src/features/add-book/ui/AddBookForm';
+import { AddBookForm } from '@/src/features/add-book';
+import { BooksListView } from '@/src/views/books-user-view';
 
 export default function Home() {
-  return <AddBookForm />;
+  return (
+    <>
+      <BooksListView />
+      <AddBookForm />
+    </>
+  );
 }

@@ -1,6 +1,7 @@
-import { addBook, getBooks } from '@/src/entities/book/api';
-import { type CreateBookInput, bookSchema } from '@/src/entities/book/model';
+import { addBook, getBooks } from '@/src/entities/book/index.server';
+import { type CreateBookInput, bookSchema } from '@/src/entities/book';
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -30,6 +31,8 @@ export async function POST(request: NextRequest) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  revalidateTag('books', 'max');
 
   return NextResponse.json({ book: data }, { status: 201 });
 }

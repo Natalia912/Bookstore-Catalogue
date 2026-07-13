@@ -1,4 +1,4 @@
-import { createClient } from '@/src/shared/lib/supabase';
+import { createClient } from '@/src/shared/configs/index.server';
 
 export const getBooks = async ({
   search,

@@ -1,111 +1,159 @@
 'use client';
 
-import { useForm, type Resolver } from 'react-hook-form';
+import { Controller, useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { bookSchema, type CreateBookInput, LANGUAGES } from '@/src/entities/book/model';
+
+import { bookSchema, type CreateBookInput, languageOptions } from '@/src/entities/book';
+import {
+  Button,
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  FieldLegend,
+  FieldRequiredSign,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from '@/src/shared/components';
+import { addBook } from '../api';
+import { toast } from 'sonner';
 
 export function AddBookForm() {
-  const router = useRouter();
-
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    setError,
+    control,
+    reset,
   } = useForm<CreateBookInput>({
     resolver: zodResolver(bookSchema) as Resolver<CreateBookInput>,
     defaultValues: {
-      language: LANGUAGES.ru,
+      language: languageOptions[0].value,
       quantity: 1,
+      cover_url: null,
     },
   });
 
   async function onSubmit(data: CreateBookInput) {
-    const res = await fetch('/api/books', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+    toast.promise(addBook(data), {
+      loading: 'Saving book...',
+      success: () => {
+        reset();
+        return 'Book added successfully!';
+      },
+      error: (err) => err?.message || 'Failed to add book.',
     });
-
-    if (!res.ok) {
-      const { error } = await res.json();
-      setError('root', { message: error });
-      return;
-    }
-
-    router.push('/');
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-md space-y-4 p-6">
-      <h1 className="mb-6 text-2xl font-semibold">Add a book</h1>
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-md space-y-6 p-6">
+      <FieldLegend>Add a book</FieldLegend>
+      <FieldDescription>
+        Fill in the details of the book you want to add to the catalogue.
+      </FieldDescription>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium">Title *</label>
-        <input
-          {...register('title')}
-          className="w-full rounded-lg border px-4 py-3 text-lg"
-          placeholder="Book title"
+      <Field>
+        <FieldLabel htmlFor="title">
+          Title
+          <FieldRequiredSign />
+        </FieldLabel>
+        <Input {...register('title')} id="title" placeholder="Book title" required />
+        <FieldError>{errors.title?.message}</FieldError>
+      </Field>
+
+      <Field>
+        <FieldLabel htmlFor="author">Author</FieldLabel>
+        <Input {...register('author')} id="author" placeholder="Author name" />
+        <FieldError>{errors.author?.message}</FieldError>
+      </Field>
+
+      <Field>
+        <FieldLabel htmlFor="isbn">ISBN</FieldLabel>
+        <Input {...register('isbn')} id="isbn" placeholder="978-0-123456-78-9" />
+        <FieldError>{errors.isbn?.message}</FieldError>
+      </Field>
+
+      <Field>
+        <FieldLabel htmlFor="category">Category</FieldLabel>
+        <Input {...register('category')} id="category" placeholder="Fiction" />
+        <FieldError>{errors.category?.message}</FieldError>
+      </Field>
+
+      <Field>
+        <FieldLabel htmlFor="cover_url">Cover URL</FieldLabel>
+        <Input
+          {...register('cover_url')}
+          id="cover_url"
+          placeholder="https://example.com/cover.jpg"
         />
-        {errors.title && <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>}
-      </div>
+        <FieldError>{errors.cover_url?.message}</FieldError>
+      </Field>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium">Author</label>
-        <input
-          {...register('author')}
-          className="w-full rounded-lg border px-4 py-3 text-lg"
-          placeholder="Author name"
+      <Field>
+        <FieldLabel htmlFor="language">Language</FieldLabel>
+        <Controller
+          name="language"
+          control={control}
+          render={({ field }) => {
+            const selectedLanguageLabel =
+              languageOptions.find((option) => option.value === field.value)?.label ??
+              'Select a language';
+
+            return (
+              <Select
+                value={field.value}
+                onValueChange={(value) => field.onChange(value as CreateBookInput['language'])}
+              >
+                <SelectTrigger id="language" className="w-full">
+                  <span>{selectedLanguageLabel}</span>
+                </SelectTrigger>
+                <SelectContent>
+                  {languageOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            );
+          }}
         />
-        {errors.author && <p className="mt-1 text-sm text-red-600">{errors.author.message}</p>}
-      </div>
+        <FieldError>{errors.language?.message}</FieldError>
+      </Field>
 
-      <div>
-        <label className="mb-1 block text-sm font-medium">Language</label>
-        <select {...register('language')} className="w-full rounded-lg border px-4 py-3 text-lg">
-          <option value={LANGUAGES.ru}>Russian</option>
-          <option value={LANGUAGES.kk}>Kazakh</option>
-          <option value={LANGUAGES.en}>English</option>
-          <option value={LANGUAGES.other}>Other</option>
-        </select>
-      </div>
-
-      <div className="flex gap-4">
-        <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium">Price (₸)</label>
-          <input
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field>
+          <FieldLabel htmlFor="price">Price (₸)</FieldLabel>
+          <Input
+            id="price"
             type="number"
             step="0.01"
-            {...register('price', { valueAsNumber: true })}
-            className="w-full rounded-lg border px-4 py-3 text-lg"
             placeholder="0"
+            {...register('price', { valueAsNumber: true })}
           />
-          {errors.price && <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>}
-        </div>
+          <FieldError>{errors.price?.message}</FieldError>
+        </Field>
 
-        <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium">Quantity</label>
-          <input
+        <Field>
+          <FieldLabel htmlFor="quantity">Quantity</FieldLabel>
+          <Input
+            id="quantity"
             type="number"
+            min="1"
             {...register('quantity', { valueAsNumber: true })}
-            className="w-full rounded-lg border px-4 py-3 text-lg"
           />
-          {errors.quantity && (
-            <p className="mt-1 text-sm text-red-600">{errors.quantity.message}</p>
-          )}
-        </div>
+          <FieldError>{errors.quantity?.message}</FieldError>
+        </Field>
       </div>
 
       {errors.root && <p className="text-sm text-red-600">{errors.root.message}</p>}
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full rounded-lg bg-black py-3 text-lg font-medium text-white disabled:opacity-50"
-      >
+      <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? 'Saving...' : 'Save book'}
-      </button>
+      </Button>
     </form>
   );
 }

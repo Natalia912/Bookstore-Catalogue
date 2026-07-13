@@ -1,4 +1,4 @@
-import { createClient } from '@/src/shared/lib/supabase';
+import { createClient } from '@/src/shared/configs/index.server';
 
 export const getBook = async (id: string) => {
   const supabase = await createClient();

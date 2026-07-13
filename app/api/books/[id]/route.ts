@@ -1,5 +1,5 @@
-import { deleteBook, getBook, updateBook } from '@/src/entities/book/api';
-import { type CreateBookInput, updateBookSchema } from '@/src/entities/book/model';
+import { deleteBook, getBook, updateBook } from '@/src/entities/book/index.server';
+import { type CreateBookInput, updateBookSchema } from '@/src/entities/book';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
