@@ -38,14 +38,15 @@ export function AddBookForm() {
   });
 
   async function onSubmit(data: CreateBookInput) {
-    toast.promise(addBook(data), {
-      loading: 'Saving book...',
-      success: () => {
-        reset();
-        return 'Book added successfully!';
-      },
-      error: (err) => err?.message || 'Failed to add book.',
-    });
+    const t = toast.loading('Saving book...');
+    const result = await addBook(data);
+
+    if (result.success) {
+      reset();
+      toast.success('Book added successfully!', { id: t });
+    } else {
+      toast.error(result.error, { id: t });
+    }
   }
 
   return (
