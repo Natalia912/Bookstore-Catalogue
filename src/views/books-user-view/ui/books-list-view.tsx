@@ -9,7 +9,7 @@ function BooksGridWrapper() {
     return <BookGrid books={booksResult.data} />;
   }
 
-  return <div>Error loading books</div>;
+  return <div>{booksResult.error}</div>;
 }
 
 function BooksListView() {
