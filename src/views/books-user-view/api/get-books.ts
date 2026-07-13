@@ -43,7 +43,7 @@ export const getBooks = async ({
 
       return {
         success: false,
-        error: errorBody?.error ?? `Request failed with status ${response.status}`,
+        error: JSON.stringify(response),
       };
     }
 
