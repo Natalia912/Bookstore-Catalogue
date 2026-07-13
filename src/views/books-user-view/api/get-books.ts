@@ -36,14 +36,13 @@ export const getBooks = async ({
       method: 'GET',
       next: { tags: ['books'] },
     });
-    console.log('getBooks response:', response);
 
     if (!response.ok) {
       const errorBody = await safeJson<{ error?: string }>(response);
 
       return {
         success: false,
-        error: JSON.stringify(response),
+        error: errorBody?.error ?? `Request failed with status ${response.status}`,
       };
     }
 
