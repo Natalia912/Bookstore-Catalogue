@@ -4,6 +4,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [],
   },
+  env: {
+    NEXT_PUBLIC_SITE_URL: process.env.CF_PAGES_URL,
+  },
 };
 
 export default nextConfig;
