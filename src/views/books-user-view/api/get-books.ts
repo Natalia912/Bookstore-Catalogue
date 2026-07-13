@@ -53,8 +53,7 @@ export const getBooks = async ({
     }
 
     return { success: true, data: data.books };
-  } catch (error) {
-    console.error('Failed to fetch books:', error);
+  } catch {
     return { success: false, error: 'Network error. Please try again.' };
   }
 };
