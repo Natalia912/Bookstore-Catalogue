@@ -12,9 +12,8 @@ type AddBookResult = ApiResult;
 export const addBook = async (book: CreateBookInput): Promise<AddBookResult> => {
   let res: Response;
 
-  const url = new URL('/api/books', getApiBaseUrl());
-
   try {
+    const url = new URL('/api/books', getApiBaseUrl());
     res = await fetch(url.toString(), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
