@@ -32,6 +32,8 @@ export const getBooks = async ({
       url.search = params.toString();
     }
 
+    console.log('Fetching:', url.toString());
+
     const response = await fetch(url.toString(), {
       method: 'GET',
       next: { tags: ['books'] },
