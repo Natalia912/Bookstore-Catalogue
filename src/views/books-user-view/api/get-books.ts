@@ -42,7 +42,9 @@ export const getBooks = async ({
 
       return {
         success: false,
-        error: JSON.stringify(response),
+        error:
+          errorBody?.error ??
+          `Request failed with status ${response.status} ${response.statusText}`,
       };
     }
 
@@ -53,7 +55,10 @@ export const getBooks = async ({
     }
 
     return { success: true, data: data.books };
-  } catch {
-    return { success: false, error: 'Network error. Please try again.' };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Network error. Please try again.',
+    };
   }
 };
