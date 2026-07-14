@@ -1,1 +1,1 @@
-export { deleteBook, getBook, updateBook, getBooks, addBook } from './api';
+export { deleteBook, getBook, updateBook, addBook } from './api';

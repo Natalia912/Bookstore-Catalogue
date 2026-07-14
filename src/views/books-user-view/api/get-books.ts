@@ -1,10 +1,6 @@
 import { Book } from '@/src/entities/book';
-import { getApiBaseUrl, safeJson } from '@/src/shared/lib';
+import { createClient } from '@/src/shared/configs/supabase';
 import { ApiResultWithData } from '@/src/shared/types';
-
-type GetBooksApiResponse = {
-  books: Book[];
-};
 
 type GetBooksResult = ApiResultWithData<Book[]>;
 
@@ -12,51 +8,28 @@ export const getBooks = async ({
   search,
   language,
 }: {
-  search?: string | null;
-  language?: string | null;
-} = {}): Promise<GetBooksResult> => {
-  const params = new URLSearchParams();
-
-  if (search) {
-    params.set('search', search);
-  }
-
-  if (language) {
-    params.set('language', language);
-  }
-
+  search: string | null;
+  language: string | null;
+}): Promise<GetBooksResult> => {
   try {
-    const url = new URL('/api/books', getApiBaseUrl());
+    const supabase = await createClient();
 
-    if (params.toString()) {
-      url.search = params.toString();
+    let query = supabase.from('books').select('*').order('created_at', { ascending: false });
+
+    if (search) {
+      query = query.ilike('title', `%${search}%`);
+    }
+    if (language) {
+      query = query.eq('language', language);
     }
 
-    console.log('Fetching:', url.toString());
+    const { data, error } = await query;
 
-    const response = await fetch(url.toString(), {
-      method: 'GET',
-      next: { tags: ['books'] },
-    });
-
-    if (!response.ok) {
-      const errorBody = await safeJson<{ error?: string }>(response);
-
-      return {
-        success: false,
-        error:
-          errorBody?.error ??
-          `Request failed with status ${response.status} ${response.statusText}`,
-      };
+    if (error) {
+      return { success: false, error: error.message };
     }
 
-    const data = await safeJson<GetBooksApiResponse>(response);
-
-    if (!data?.books) {
-      return { success: false, error: 'Invalid response from server.' };
-    }
-
-    return { success: true, data: data.books };
+    return { success: true, data: data ?? [] };
   } catch (err) {
     return {
       success: false,
