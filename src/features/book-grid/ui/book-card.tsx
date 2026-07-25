@@ -24,7 +24,7 @@ export default function BookCard({ book, onClick }: Props) {
     <Card
       onClick={onClick}
       size="sm"
-      className="cursor-pointer gap-0 overflow-hidden p-0 transition-shadow hover:shadow-md"
+      className="h-full cursor-pointer gap-0 overflow-hidden p-0 transition-shadow hover:shadow-md"
     >
       <div className="bg-muted relative flex aspect-2/3 max-h-70 w-full items-center justify-center">
         {cover_url ? (
@@ -44,11 +44,11 @@ export default function BookCard({ book, onClick }: Props) {
         <Badge className="absolute top-2 left-2">{LANGUAGE_LABELS[language] ?? language}</Badge>
       </div>
 
-      <CardContent className="p-3">
+      <CardContent className="flex grow flex-col p-3">
         <CardTitle>{title}</CardTitle>
         {author && <CardDescription>{author}</CardDescription>}
 
-        <div className="flex items-center justify-between pt-2 md:pt-4">
+        <div className="mt-auto flex items-center justify-between pt-2 md:pt-4">
           <span className="text-sm font-medium">{formatPrice(price) ?? '—'}</span>
           <span className={'text-xs ' + (inStock ? 'text-emerald-600' : 'text-muted-foreground')}>
             {inStock ? `in stock · ${quantity}` : 'out of stock'}
