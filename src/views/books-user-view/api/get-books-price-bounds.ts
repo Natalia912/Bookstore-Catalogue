@@ -1,7 +1,7 @@
 import { createClient } from '@/src/shared/configs/supabase';
 import { ApiResultWithData } from '@/src/shared/types';
+import { PriceRange } from '../model/types';
 
-type PriceRange = [number, number];
 type GetPriceBoundsResult = ApiResultWithData<PriceRange>;
 
 const DEFAULT_PRICE_BOUNDS: PriceRange = [0, 100];
