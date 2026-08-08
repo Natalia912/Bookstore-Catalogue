@@ -1,38 +1,78 @@
-# Book catalogue app
+# Book Catalogue App
+
+A small Next.js-based book catalogue application for browsing a collection of books and discovering basic information such as title, author, language, price, quantity, cover, and ISBN.
 
 Production link: [https://bookstore-catalogue.tretiakowa2212.workers.dev/](https://bookstore-catalogue.tretiakowa2212.workers.dev/)
 
+## Project Purpose
+
+The goal of this project is to provide a minimal, user-friendly catalogue where visitors can quickly search and filter the available book collection. The public-facing side should present a clean list/grid of books with enough metadata to help a reader decide what to explore.
+
+The app is intentionally scoped to a small catalogue use case:
+
+- Public users can browse the catalogue without authentication.
+- Users can search by title and author.
+- Users can narrow results by language and price range.
+- The catalogue is designed to display a minimal set of book information instead of a full commerce experience.
+
+The admin side supports operational tasks for the catalogue data:
+
+- Manage current book catalogue (edit/delete) with search and filter options for quicker book identification.
+- Add new books or edit existing books manually through a form.
+- Quick new book form fill with ISBN search.
+
+## Current Features
+
+The current app is a minimal catalogue with a user view and a lightweight admin entry point:
+
+- Responsive book grid/list UI.
+- Search input that filters catalogue results.
+- Language filter and price range filter controls.
+- Price bound fetching for correctly sized filter UI.
+- Form-based add-book workflow using React Hook Form and Zod validation.
+- Supabase-backed data access layer with Next.js server-side integration.
+
+## Tech Stack
+
+This project is built with:
+
+- Next.js 16 with the App Router
+- React 19 and TypeScript
+- Tailwind CSS and shadcn/ui
+- Supabase for data storage/access
+- Cloudflare/OpenNext deployment support
+- ESLint, Prettier and Wrangler configuration
+
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run format
+npm run preview
+npm run deploy
+```
 
-## Learn More
+## Roadmap
 
-To learn more about Next.js, take a look at the following resources:
+Near-term priorities for this project include:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Completing the admin CRUD flow for create, read, update and delete of catalogue records.
+2. Adding a proper ISBN search workflow with optional external enrichment.
