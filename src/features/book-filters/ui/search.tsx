@@ -23,12 +23,18 @@ function Search({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const onSearchRef = useRef(onSearch);
+  const isFirstValueSync = useRef(true);
 
   useEffect(() => {
     onSearchRef.current = onSearch;
   }, [onSearch]);
 
   useEffect(() => {
+    if (isFirstValueSync.current) {
+      isFirstValueSync.current = false;
+      return;
+    }
+
     const timer = setTimeout(() => onSearchRef?.current(value), 300);
     return () => clearTimeout(timer);
   }, [value]);

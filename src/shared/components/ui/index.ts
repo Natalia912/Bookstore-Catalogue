@@ -12,3 +12,4 @@ export * from './slider';
 export * from './collapsible';
 export * from './empty';
 export * from './skeleton';
+export * from './pagination';
