@@ -35,6 +35,7 @@ function useBookFilters(priceBounds?: [number, number] | null) {
       priceRange?: [number, number];
     }) => {
       const params = new URLSearchParams(searchParams?.toString() ?? '');
+      params.delete('page');
 
       if (nextValues.search !== undefined) {
         if (nextValues.search.trim()) {
