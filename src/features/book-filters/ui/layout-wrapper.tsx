@@ -6,6 +6,7 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+  Spinner,
 } from '@/src/shared/components';
 import { ReactElement } from 'react';
 import { FilterIcon } from 'lucide-react';
@@ -15,24 +16,31 @@ type Props = {
   search: ReactElement;
   select: ReactElement;
   slider: ReactElement;
+  isLoading: boolean;
   onReset: () => void;
 };
 
-function ResetButton({ onReset }: { onReset: () => void }) {
+function ResetButton({ onReset, isLoading }: { onReset: () => void; isLoading: boolean }) {
   return (
-    <Button
-      type="button"
-      variant="outline"
-      size="sm"
-      onClick={onReset}
-      className="whitespace-nowrap md:self-start lg:self-center"
-    >
-      Reset
-    </Button>
+    <div className="relative flex flex-row-reverse">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={onReset}
+        className="whitespace-nowrap md:self-start lg:self-center"
+        data-testid="reset-filters-button"
+      >
+        Reset
+      </Button>
+      {isLoading && (
+        <Spinner className="text-primary absolute top-1/2 right-14 size-5 -translate-1/2 lg:-right-10" />
+      )}
+    </div>
   );
 }
 
-function LayoutWrapper({ search, select, slider, onReset }: Props) {
+function LayoutWrapper({ search, select, slider, onReset, isLoading }: Props) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -58,14 +66,14 @@ function LayoutWrapper({ search, select, slider, onReset }: Props) {
           <div className="flex flex-col gap-2">
             {select}
             {slider}
-            <ResetButton onReset={onReset} />
+            <ResetButton onReset={onReset} isLoading={isLoading} />
           </div>
         </CollapsibleContent>
 
         <div className="hidden items-center gap-4 lg:flex lg:flex-1/2">
           {select}
           {slider}
-          <ResetButton onReset={onReset} />
+          <ResetButton onReset={onReset} isLoading={isLoading} />
         </div>
       </div>
     </Collapsible>

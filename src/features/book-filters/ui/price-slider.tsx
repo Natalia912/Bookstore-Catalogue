@@ -1,30 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useState } from 'react';
 import { Field, FieldDescription, FieldLabel, Slider } from '@/src/shared/components';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function useDebouncedCallback<T extends (...args: any[]) => void>(callback: T, delay: number) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const callbackRef = useRef(callback);
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  return useCallback(
-    (...args: Parameters<T>) => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => callbackRef.current(...args), delay);
-    },
-    [delay]
-  );
-}
 
 function PriceSlider({
   min = 0,
@@ -32,15 +9,15 @@ function PriceSlider({
   step = 1,
   value,
   onChange,
-  debounceMs = 400,
+  disabled,
 }: {
   min?: number;
   max?: number;
   step?: number;
-  value?: [number, number];
-  onChange?: (value: [number, number]) => void;
-  debounceMs?: number;
-} = {}) {
+  disabled?: boolean;
+  value: [number, number];
+  onChange: (value: [number, number]) => void;
+}) {
   const labelId = useId();
   const descriptionId = useId();
 
@@ -51,16 +28,16 @@ function PriceSlider({
     if (value) setLocalValue(value);
   }, [value]);
 
-  const debouncedOnChange = useDebouncedCallback((next: [number, number]) => {
-    onChange?.(next);
-  }, debounceMs);
+  const handleValueChange = useCallback((next: [number, number]) => {
+    setLocalValue(next);
+  }, []);
 
-  const handleValueChange = useCallback(
+  // Update local value while dragging, but only notify parent when user releases.
+  const handleValueCommit = useCallback(
     (next: [number, number]) => {
-      setLocalValue(next);
-      debouncedOnChange(next);
+      onChange?.(next);
     },
-    [debouncedOnChange]
+    [onChange]
   );
 
   const [currentMin, currentMax] = localValue;
@@ -80,10 +57,13 @@ function PriceSlider({
         aria-labelledby={labelId}
         aria-describedby={descriptionId}
         value={localValue}
+
         onValueChange={(next) => handleValueChange(next as [number, number])}
+        onValueCommitted={(next) => handleValueCommit(next as [number, number])}
         min={min}
         max={max}
         step={step}
+        disabled={disabled}
       />
       <div className="text-muted-foreground flex items-center justify-between text-sm">
         <span>{currentMin}₸</span>
