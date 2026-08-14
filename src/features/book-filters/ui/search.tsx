@@ -12,10 +12,12 @@ import { useEffect, useId, useRef } from 'react';
 
 function Search({
   value,
+  disabled,
   onChange,
   onSearch,
 }: {
   value: string;
+  disabled?: boolean;
   onChange: (query: string) => void;
   onSearch: (query: string) => void;
 }) {
@@ -35,7 +37,7 @@ function Search({
       return;
     }
 
-    const timer = setTimeout(() => onSearchRef?.current(value), 300);
+    const timer = setTimeout(() => onSearchRef?.current(value), 1500);
     return () => clearTimeout(timer);
   }, [value]);
 
@@ -58,6 +60,7 @@ function Search({
       <InputGroup>
         <InputGroupInput
           id={inputId}
+          disabled={disabled}
           ref={inputRef}
           placeholder="Search for title or author"
           role="searchbox"

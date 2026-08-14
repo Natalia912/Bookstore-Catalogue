@@ -15,9 +15,11 @@ import {
 function LanguageSelect({
   language,
   onSelect,
+  disabled,
 }: {
   language: Language | null;
   onSelect: (lang: Language | null) => void;
+  disabled?: boolean;
 }) {
   const [localLanguage, setLocalLanguage] = useState<Language | null>(language);
 
@@ -38,7 +40,12 @@ function LanguageSelect({
   );
 
   return (
-    <Select items={languageOptions} value={localLanguage} onValueChange={handleValueChange}>
+    <Select
+      disabled={disabled}
+      items={languageOptions}
+      value={localLanguage}
+      onValueChange={handleValueChange}
+    >
       <SelectTrigger className="w-full">
         <SelectValue placeholder="Select language" />
       </SelectTrigger>

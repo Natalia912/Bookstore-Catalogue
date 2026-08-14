@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Language } from '@/src/entities/book';
 
@@ -10,6 +10,8 @@ function useBookFilters(priceBounds?: [number, number] | null) {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const searchTokenRef = useRef(0);
+  const [isPending, startTransition] = useTransition();
 
   const [draftQuery, setDraftQuery] = useState(() => searchParams?.get('search') ?? '');
 
@@ -66,14 +68,20 @@ function useBookFilters(priceBounds?: [number, number] | null) {
       }
 
       const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname;
-      router.replace(nextUrl, { scroll: false });
+      startTransition(() => {
+        router.replace(nextUrl, { scroll: false });
+      });
     },
     [pathname, router, searchParams]
   );
 
   const handleSearchChange = useCallback(
     (nextQuery: string) => {
-      syncFilters({ search: nextQuery });
+      const token = ++searchTokenRef.current;
+      startTransition(() => {
+        if (token !== searchTokenRef.current) return; // superseded by reset/newer search
+        syncFilters({ search: nextQuery });
+      });
     },
     [syncFilters]
   );
@@ -93,6 +101,7 @@ function useBookFilters(priceBounds?: [number, number] | null) {
   );
 
   const resetFilters = useCallback(() => {
+    searchTokenRef.current += 1;
     setDraftQuery('');
 
     const currentQuery = searchParams?.toString() ?? '';
@@ -100,13 +109,16 @@ function useBookFilters(priceBounds?: [number, number] | null) {
       return;
     }
 
-    router.replace(pathname, { scroll: false });
+    startTransition(() => {
+      router.replace(pathname, { scroll: false });
+    });
   }, [pathname, router, searchParams]);
 
   return {
     draftQuery,
     language,
     priceRange,
+    isPending,
     setDraftQuery,
     onSearch: handleSearchChange,
     onLanguageChange: handleLanguageChange,
