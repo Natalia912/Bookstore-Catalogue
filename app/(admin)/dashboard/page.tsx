@@ -1,11 +1,10 @@
 import { redirect } from 'next/navigation';
-import { auth, hasAdminAccess } from '@/src/entities/auth';
+import { ADMIN_LOGIN_PATH, hasAdminAccess } from '@/src/entities/auth';
 
 export default async function AdminPage() {
-  const session = await auth();
-
-  if (!hasAdminAccess(session?.user ?? null)) {
-    redirect('/login?error=unauthorized');
+  if (!(await hasAdminAccess())) {
+    const url = `${ADMIN_LOGIN_PATH}?error=unauthorized`;
+    redirect(url);
   }
 
   return (

@@ -1,121 +1,73 @@
-import { createClient } from '@supabase/supabase-js';
-import NextAuth from 'next-auth';
-import Credentials from 'next-auth/providers/credentials';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 
-export type AdminAccessUser = {
-  id?: string | null;
-  email?: string | null;
-  role?: string | null;
+export const ADMIN_ROLE = 'admin' as const;
+export const ADMIN_LOGIN_PATH = '/login';
+export const ADMIN_DASHBOARD_MATCHER = '/dashboard/:path*';
+
+type AdminProfile = {
+  is_admin: boolean;
 };
 
-export type AdminSessionUser = AdminAccessUser & {
-  id: string;
-  email: string;
-  role: 'admin';
+type CookieStore = {
+  getAll: () => { name: string; value: string }[];
+  set: (name: string, value: string, options: CookieOptions) => void;
 };
 
-export function getConfiguredAdminEmail(): string {
-  return (process.env.SUPABASE_ADMIN_EMAIL ?? process.env.ADMIN_EMAIL ?? '').trim().toLowerCase();
+function getSupabaseConfiguration() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  return url && publishableKey ? { url, publishableKey } : null;
 }
 
-export function isAdminEmail(email?: string | null): boolean {
-  if (!email) {
-    return false;
-  }
+function createSupabaseServerClient(cookieStore: CookieStore) {
+  const configuration = getSupabaseConfiguration();
 
-  const configuredAdminEmail = getConfiguredAdminEmail();
-  return Boolean(configuredAdminEmail) && email.trim().toLowerCase() === configuredAdminEmail;
-}
-
-export function hasAdminAccess(user?: AdminAccessUser | null): boolean {
-  if (!user || !user.email) {
-    return false;
-  }
-
-  return isAdminEmail(user.email) && user.role === 'admin';
-}
-
-export async function authorizeAdminCredentials(
-  email: string,
-  password: string,
-): Promise<AdminSessionUser | null> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const supabaseAnonKey =
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
-    process.env.SUPABASE_ANON_KEY ??
-    process.env.SUPABASE_SECRET_KEY;
-
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!configuration) {
     return null;
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-    auth: {
-      persistSession: false,
+  return createServerClient(configuration.url, configuration.publishableKey, {
+    cookies: {
+      getAll: () => cookieStore.getAll(),
+      setAll: (cookiesToSet) => {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
+        } catch {
+          // Server Components cannot write cookies. proxy.ts refreshes sessions instead.
+        }
+      },
     },
   });
-
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-  if (error || !data.user || !data.user.email) {
-    return null;
-  }
-
-  if (!isAdminEmail(data.user.email)) {
-    return null;
-  }
-
-  return {
-    id: data.user.id,
-    email: data.user.email,
-    role: 'admin',
-  };
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [
-    Credentials({
-      credentials: {
-        email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' },
-      },
-      authorize: async (credentials) => {
-        const email = String(credentials?.email ?? '').trim();
-        const password = String(credentials?.password ?? '');
+export async function isSupabaseUserAdmin(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('admin_profiles')
+    .select('is_admin')
+    .eq('id', userId)
+    .maybeSingle<AdminProfile>();
 
-        if (!email || !password) {
-          return null;
-        }
+  return !error && data?.is_admin === true;
+}
 
-        return authorizeAdminCredentials(email, password);
-      },
-    }),
-  ],
-  pages: {
-    signIn: '/login',
-  },
-  session: {
-    strategy: 'jwt',
-  },
-  callbacks: {
-    async jwt({ token, user }) {
-      const userEmail = user?.email ?? token.email;
+export async function hasAdminAccess(): Promise<boolean> {
+  const cookieStore = await cookies();
+  const supabase = createSupabaseServerClient(cookieStore);
 
-      if (userEmail) {
-        token.email = userEmail;
-        token.role = isAdminEmail(userEmail) ? 'admin' : 'user';
-      }
+  if (!supabase) {
+    return false;
+  }
 
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.email = token.email ?? session.user.email;
-        session.user.name = session.user.name ?? token.email ?? null;
-        (session.user as { role?: string }).role = String(token.role ?? 'user');
-      }
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
-      return session;
-    },
-  },
-});
+  return !error && Boolean(user && (await isSupabaseUserAdmin(supabase, user.id)));
+}

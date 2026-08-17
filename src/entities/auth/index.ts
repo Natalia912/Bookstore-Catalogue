@@ -1,1 +1,7 @@
-export { auth, authorizeAdminCredentials, hasAdminAccess, handlers, isAdminEmail, signIn, signOut } from './config';
+export {
+  ADMIN_DASHBOARD_MATCHER,
+  ADMIN_LOGIN_PATH,
+  ADMIN_ROLE,
+  hasAdminAccess,
+  isSupabaseUserAdmin,
+} from './config';
