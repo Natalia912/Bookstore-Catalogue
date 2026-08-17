@@ -6,6 +6,22 @@ import { useSearchParams } from 'next/navigation';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+export function getLoginErrorMessage(error: string | null): string | null {
+  if (error === 'CredentialsSignin' || error === 'invalid_credentials') {
+    return 'Invalid email or password';
+  }
+
+  if (error === 'unauthorized') {
+    return 'You are not authorized to access the admin dashboard.';
+  }
+
+  if (error === 'configuration') {
+    return 'Admin sign-in is not configured correctly.';
+  }
+
+  return null;
+}
+
 export default function LoginPage() {
   return (
     <Suspense>
@@ -16,12 +32,7 @@ export default function LoginPage() {
 
 function LoginForm() {
   const error = useSearchParams().get('error');
-  const errorMessage =
-    error === 'CredentialsSignin'
-      ? 'Invalid email or password'
-      : error === 'unauthorized'
-        ? 'You are not authorized to access the admin dashboard.'
-        : null;
+  const errorMessage = getLoginErrorMessage(error);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +49,7 @@ function LoginForm() {
     const supabase = createBrowserClient(supabaseUrl, supabasePublishableKey);
     const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
 
-    window.location.assign(signInError ? '/login?error=CredentialsSignin' : '/dashboard');
+    window.location.assign(signInError ? '/login?error=invalid_credentials' : '/dashboard');
   };
 
   return (
