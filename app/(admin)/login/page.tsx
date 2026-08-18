@@ -1,7 +1,18 @@
 'use client';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { createBrowserClient } from '@supabase/ssr';
 import { useSearchParams } from 'next/navigation';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+} from '@/src/shared/components';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -12,7 +23,7 @@ export function getLoginErrorMessage(error: string | null): string | null {
   }
 
   if (error === 'unauthorized') {
-    return 'You are not authorized to access the admin dashboard.';
+    return 'Please sign in to access the admin dashboard.';
   }
 
   if (error === 'configuration') {
@@ -33,6 +44,15 @@ export default function LoginPage() {
 function LoginForm() {
   const error = useSearchParams().get('error');
   const errorMessage = getLoginErrorMessage(error);
+  const errorRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (errorMessage) {
+      errorRef.current?.focus();
+    }
+  }, [errorMessage]);
+
+  const isCredentialsError = error === 'CredentialsSignin' || error === 'invalid_credentials';
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,12 +73,58 @@ function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input name="email" type="email" required />
-      <input name="password" type="password" required />
-      <button type="submit">Sign in</button>
-
-      <p style={{ color: 'red' }}>{errorMessage}</p>
-    </form>
+    <main className="flex min-h-screen w-full items-center justify-center bg-neutral-100 p-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-lg font-bold">Login to admin panel</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} id="login-form" noValidate>
+            <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  aria-invalid={isCredentialsError || undefined}
+                  aria-describedby={errorMessage ? 'login-error' : undefined}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  aria-invalid={isCredentialsError || undefined}
+                  aria-describedby={errorMessage ? 'login-error' : undefined}
+                />
+              </div>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex-col gap-2">
+          <Button type="submit" className="w-full" form="login-form">
+            Login
+          </Button>
+          {errorMessage && (
+            <p
+              id="login-error"
+              ref={errorRef}
+              role="alert"
+              aria-live="assertive"
+              tabIndex={-1}
+              className="text-destructive self-start text-sm focus:outline-none"
+            >
+              {errorMessage}
+            </p>
+          )}
+        </CardFooter>
+      </Card>
+    </main>
   );
 }
