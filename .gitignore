@@ -57,3 +57,6 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+pass.ts
+TODO.md

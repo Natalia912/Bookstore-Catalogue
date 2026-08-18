@@ -59,6 +59,16 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to view the app.
 
+### Admin authentication setup
+
+Provision the dedicated Supabase administrator and write the browser session settings to `.env` with:
+
+```bash
+bash scripts/provision-supabase-admin.sh
+```
+
+The wizard applies the documented `admin_profiles` contract and guides the operator through creating the designated Supabase Auth account. See [the contract](docs/admin-auth-contract.md) for the authorization model.
+
 ## Available Scripts
 
 ```bash

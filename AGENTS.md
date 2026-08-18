@@ -87,7 +87,21 @@ Refer to `.agents/skills/feature-sliced-design` for more info about the rules an
 
 ## Important project-specific notes
 
-- The project uses shadcn/ui components (installed as needed) and lives under `src/shared/components`
+- The project uses shadcn/ui components (installed as needed) and lives under `src/shared/components`. Use the shadcn components where possible. Only default to custom components, if no shadcn/ui components available.
 - The current app already uses `sonner` for toasts, `zod` for validation, and `react-hook-form` for forms
 - Cloudflare deployment is part of the workflow, so changes that affect build/runtime behavior should be tested with the relevant preview/deploy scripts
 - Because this project uses a newer Next.js release, be cautious with framework conventions and consult the local Next.js docs when unsure
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked as markdown files under .scratch/. See docs/agents/issue-tracker.md.
+
+### Triage labels
+
+Uses the default triage labels: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See docs/agents/triage-labels.md.
+
+### Domain docs
+
+Single-context repo: root CONTEXT.md plus docs/adr/. See docs/agents/domain.md.
