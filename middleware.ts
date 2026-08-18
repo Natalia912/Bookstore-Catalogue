@@ -5,7 +5,7 @@ import {
   isSupabaseUserAdmin,
 } from '@/src/entities/auth';
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const response = NextResponse.next({ request });
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabasePublishableKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
