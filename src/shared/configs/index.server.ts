@@ -1,1 +1,5 @@
-export { createClient } from './supabase';
+export {
+  createAuthMiddlewareClient,
+  createAuthServerClient,
+  createPublicClient,
+} from './supabase/index.server';

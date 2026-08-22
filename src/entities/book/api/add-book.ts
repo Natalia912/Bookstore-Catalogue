@@ -1,8 +1,8 @@
-import { createClient } from '@/src/shared/configs/index.server';
+import { createAuthServerClient } from '@/src/shared/configs/index.server';
 import { CreateBookInput } from '../model';
 
 export const addBook = async (input: CreateBookInput) => {
-  const supabase = await createClient();
+  const supabase = await createAuthServerClient();
 
   return supabase
     .from('books')

@@ -1,5 +1,5 @@
 import { Book } from '@/src/entities/book';
-import { createClient } from '@/src/shared/configs/supabase';
+import { createPublicClient } from '@/src/shared/configs/index.server';
 import { BOOKS_PAGE_SIZE } from '../model/constants';
 import { PriceRange } from '../model/types';
 
@@ -27,7 +27,7 @@ export const getBooks = async ({
   pageSize?: number;
 }): Promise<GetBooksResult> => {
   try {
-    const supabase = await createClient();
+    const supabase = createPublicClient();
     const normalizedPage = Number.isFinite(Number(page)) ? Math.max(1, Number(page)) : 1;
     const normalizedPageSize = Number.isFinite(pageSize) ? Math.max(1, Number(pageSize)) : 8;
 
@@ -64,7 +64,6 @@ export const getBooks = async ({
     const from = (safePage - 1) * normalizedPageSize;
 
     let dataQuery = supabase.from('books').select('*').order('created_at', { ascending: false });
-
     if (search) {
       dataQuery = dataQuery.or(`title.ilike.%${search}%,author.ilike.%${search}%`);
     }

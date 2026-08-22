@@ -1,10 +1,8 @@
-import { cookies } from 'next/headers';
 import { createAuthServerClient } from '@/src/shared/configs/supabase/auth-client';
 import { isSupabaseUserAdmin } from './is-supabase-user-admin';
 
 export async function hasAdminAccess(): Promise<boolean> {
-  const cookieStore = await cookies();
-  const supabase = createAuthServerClient(cookieStore);
+  const supabase = await createAuthServerClient();
 
   if (!supabase) {
     return false;

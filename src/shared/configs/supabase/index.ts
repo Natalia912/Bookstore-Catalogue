@@ -1,3 +1,2 @@
-export { createAuthMiddlewareClient, createAuthServerClient } from './auth-client';
-export { createClient } from './client';
+export { createSupabaseBrowserClient } from './browser-client';
 export { getPublicSupabaseConfig, type PublicSupabaseConfig } from './public';

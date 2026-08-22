@@ -1,4 +1,4 @@
-import { createClient } from '@/src/shared/configs/supabase';
+import { createPublicClient } from '@/src/shared/configs/index.server';
 import { ApiResultWithData } from '@/src/shared/types';
 import { PriceRange } from '../model/types';
 import { unstable_cache } from 'next/cache';
@@ -10,7 +10,7 @@ const DEFAULT_PRICE_BOUNDS: PriceRange = [0, 100];
 export const getBooksPriceBounds = unstable_cache(
   async (): Promise<GetPriceBoundsResult> => {
     try {
-      const supabase = await createClient();
+      const supabase = createPublicClient();
 
       const { data, error } = await supabase.from('books').select('price').not('price', 'is', null);
 
