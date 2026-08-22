@@ -1,10 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
+import { isSupabaseUserAdmin } from './is-supabase-user-admin';
 
-vi.mock('next/headers', () => ({ cookies: vi.fn() }));
-
-describe('admin access contract', () => {
+describe('isSupabaseUserAdmin', () => {
   it('grants access only when the authenticated user has the persisted admin flag', async () => {
-    const { isSupabaseUserAdmin } = await import('./config');
     const maybeSingle = vi.fn().mockResolvedValue({ data: { is_admin: true }, error: null });
     const eq = vi.fn().mockReturnValue({ maybeSingle });
     const select = vi.fn().mockReturnValue({ eq });
@@ -16,7 +14,6 @@ describe('admin access contract', () => {
   });
 
   it('fails closed when the profile is missing or not marked as admin', async () => {
-    const { isSupabaseUserAdmin } = await import('./config');
     const maybeSingle = vi.fn().mockResolvedValue({ data: { is_admin: false }, error: null });
     const eq = vi.fn().mockReturnValue({ maybeSingle });
     const select = vi.fn().mockReturnValue({ eq });
