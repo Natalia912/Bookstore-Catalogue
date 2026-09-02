@@ -1,6 +1,7 @@
 import { Book } from '@/src/entities/book';
 import { createPublicClient } from '@/src/shared/configs/index.server';
 import type { PriceRange } from '@/src/shared/types';
+import { cacheTag } from 'next/cache';
 
 type PaginationMeta = {
   page: number;
@@ -27,6 +28,8 @@ export const getBooks = async ({
   page?: number | null;
   pageSize?: number;
 }): Promise<GetBooksResult> => {
+  'use cache'
+  cacheTag('books-list')
   try {
     const supabase = createPublicClient();
     const normalizedPage = Number.isFinite(Number(page)) ? Math.max(1, Number(page)) : 1;

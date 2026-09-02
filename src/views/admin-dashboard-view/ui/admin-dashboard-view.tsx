@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation';
-import type { AdminDashboardQueryParams } from '../model/use-query';
-import { normalizeAdminDashboardQuery } from '../model/use-query';
+import type { AdminDashboardQueryParams } from '../model/query';
+import { normalizeAdminDashboardQuery } from '../model/query';
 import { MainPageContent } from './main-page-content';
 import { ADMIN_LOGIN_PATH, hasAdminAccess } from '@/src/entities/auth';
 import { getBooksPriceBounds, getBooks } from '@/src/entities/book/index.server';
 import { BooksErrorState } from './books-error-state';
 import { BOOKS_PAGE_SIZE } from '../model/constants';
+import { BookTable } from './book-table';
 type AdminDashboardViewProps = {
   searchParams: AdminDashboardQueryParams;
 };
@@ -40,13 +41,15 @@ async function AdminDashboardView({ searchParams }: AdminDashboardViewProps) {
 
   return (
     <MainPageContent
-      books={booksResult.data}
+      isEmpty={booksResult.data.length === 0}
       searchParams={searchParams}
       priceBounds={priceBounds}
       currentPage={normalized.currentPage}
       totalPages={booksResult.pagination.totalPages}
       hasActiveFilters={hasActiveFilters}
-    />
+    >
+      <BookTable books={booksResult.data} />
+    </MainPageContent>
   );
 }
 
