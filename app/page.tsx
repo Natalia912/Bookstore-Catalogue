@@ -1,5 +1,5 @@
 import { BooksListView } from '@/src/views/books-user-view';
-import { getBooksPriceBounds } from '@/src/views/books-user-view';
+import { getBooksPriceBounds } from '@/src/entities/book/index.server';
 
 type SearchParams = Promise<{
   search?: string;

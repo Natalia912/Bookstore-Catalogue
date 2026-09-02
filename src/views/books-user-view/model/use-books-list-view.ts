@@ -1,4 +1,4 @@
-import { PriceRange } from '@/src/views/books-user-view/model/types';
+import type { PriceRange } from '@/src/shared/types';
 import { BOOKS_PAGE_SIZE } from './constants';
 
 type BooksListQueryParams = {
@@ -31,9 +31,9 @@ function useBooksListView(searchParams?: BooksListQueryParams): UseBooksListView
   const hasPriceFilter = Boolean(searchParams?.minPrice || searchParams?.maxPrice);
   const priceRange = hasPriceFilter
     ? ([Number.isFinite(minPrice) ? minPrice : 0, Number.isFinite(maxPrice) ? maxPrice : 100] as [
-        number,
-        number,
-      ])
+      number,
+      number,
+    ])
     : null;
 
   const hasActiveFilters = Boolean(search || language || priceRange);

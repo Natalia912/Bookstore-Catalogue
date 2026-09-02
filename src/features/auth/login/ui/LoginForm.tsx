@@ -65,15 +65,12 @@ export function LoginForm() {
           </div>
         </form>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex-col gap-2">
         <Button type="submit" className="w-full" disabled={isLoading} form="login-form">
           {isLoading ? 'Signing in...' : 'Login'}
         </Button>
         {error && (
-          <div
-            role="alert"
-            className="bg-destructive/10 border-destructive/30 text-destructive rounded border p-3 text-sm"
-          >
+          <div role="alert" className="text-destructive text-sm">
             {error}
           </div>
         )}
