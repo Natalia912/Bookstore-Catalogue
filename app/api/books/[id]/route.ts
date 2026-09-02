@@ -1,6 +1,7 @@
 import { deleteBook, getBook, updateBook } from '@/src/entities/book/index.server';
 import { type CreateBookInput, updateBookSchema } from '@/src/entities/book';
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag, revalidatePath } from 'next/cache';
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -30,6 +31,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  revalidateTag('books-list', 'max');
+  revalidatePath('/dashboard');
+
   return NextResponse.json({ book: data });
 }
 
@@ -38,11 +42,16 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { error } = await deleteBook(id);
+  const { error, data } = await deleteBook(id);
+  console.log('Delete book response:', { data, error });
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  revalidateTag('books-list', 'max');
+  revalidatePath('/dashboard');
+
   return NextResponse.json({ success: true });
 }
+

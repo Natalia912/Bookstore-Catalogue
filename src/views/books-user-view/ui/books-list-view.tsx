@@ -32,7 +32,9 @@ function BooksListShell({
     <main className="mx-auto flex w-full max-w-300 flex-col gap-4 px-4 py-4 lg:gap-6">
       <h1 className="text-4xl">Books</h1>
       <section>
-        <BookFilters priceBounds={priceBounds} />
+        <Suspense fallback={null}>
+          <BookFilters priceBounds={priceBounds} />
+        </Suspense>
       </section>
       <Suspense fallback={<BooksListLoadingState />}>{children}</Suspense>
     </main>

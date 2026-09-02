@@ -1,3 +1,5 @@
+'use client';
+import Link from 'next/link';
 import { Book, formatPrice } from '@/src/entities/book';
 import {
   Badge,
@@ -9,10 +11,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/src/shared/components';
+import { DeleteModal } from './delete-modal';
+import { useDeleteBook } from '../model/use-delete';
 
 const headerCells = ['Title', 'Author', 'Language', 'Price', 'Stock', 'ISBN'];
 
 export const BookTable = ({ books }: { books: Book[] }) => {
+  const { confirmedDeleteBook } = useDeleteBook();
+
   return (
     <Table>
       <TableHeader>
@@ -36,12 +42,20 @@ export const BookTable = ({ books }: { books: Book[] }) => {
             <TableCell>{book.isbn ?? '—'}</TableCell>
             <TableCell>
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" size="sm">
-                  Edit
-                </Button>
-                <Button type="button" variant="destructive" size="sm">
-                  Delete
-                </Button>
+                <Link href={`/dashboard/edit-book?id=${book.id}`} passHref>
+                  <Button type="button" variant="outline" size="sm">
+                    Edit
+                  </Button>
+                </Link>
+                <DeleteModal
+                  onConfirm={() => confirmedDeleteBook(book.id)}
+                  trigger={
+                    <Button type="button" variant="destructive" size="sm">
+                      Delete
+                    </Button>
+                  }
+                  title={book.title}
+                />
               </div>
             </TableCell>
           </TableRow>

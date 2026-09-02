@@ -15,3 +15,4 @@ export * from './skeleton';
 export * from './pagination';
 export * from './spinner';
 export * from './table';
+export * from './dialog';
