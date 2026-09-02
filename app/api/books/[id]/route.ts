@@ -42,8 +42,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { error, data } = await deleteBook(id);
-  console.log('Delete book response:', { data, error });
+  const { error } = await deleteBook(id);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -54,4 +53,3 @@ export async function DELETE(
 
   return NextResponse.json({ success: true });
 }
-
