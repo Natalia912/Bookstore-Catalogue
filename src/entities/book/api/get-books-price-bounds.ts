@@ -1,7 +1,7 @@
-import { createPublicClient } from '@/src/shared/configs/index.server';
-import { ApiResultWithData } from '@/src/shared/types';
-import { PriceRange } from '../model/types';
 import { unstable_cache } from 'next/cache';
+
+import { createPublicClient } from '@/src/shared/configs/index.server';
+import type { ApiResultWithData, PriceRange } from '@/src/shared/types';
 
 type GetPriceBoundsResult = ApiResultWithData<PriceRange>;
 

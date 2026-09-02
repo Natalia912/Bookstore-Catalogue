@@ -26,7 +26,7 @@ export default function BookCard({ book, onClick }: Props) {
       size="sm"
       className="h-full cursor-pointer gap-0 overflow-hidden p-0 transition-shadow hover:shadow-md"
     >
-      <div className="bg-muted relative flex aspect-2/3 max-h-70 w-full items-center justify-center">
+      <div className="bg-muted relative flex aspect-2/3 max-h-60 w-full items-center justify-center">
         {cover_url ? (
           <Image
             src={cover_url}

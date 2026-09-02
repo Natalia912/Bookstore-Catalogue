@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Field, FieldDescription, FieldLabel, Slider } from '@/src/shared/components';
+import { PriceRange } from '@/src/shared/types';
 
 function PriceSlider({
   min = 0,
@@ -15,32 +16,28 @@ function PriceSlider({
   max?: number;
   step?: number;
   disabled?: boolean;
-  value: [number, number];
-  onChange: (value: [number, number]) => void;
+  value: PriceRange;
+  onChange: (value: PriceRange) => void;
 }) {
   const labelId = useId();
   const descriptionId = useId();
 
-  const [localValue, setLocalValue] = useState<[number, number]>(value ?? [min, max]);
+  const [localValue, setLocalValue] = useState<PriceRange>(value ?? [min, max]);
+
+  const [currentMin, currentMax] = localValue;
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (value) setLocalValue(value);
+    setLocalValue(value);
   }, [value]);
 
-  const handleValueChange = useCallback((next: [number, number]) => {
+  const handleValueChange = (next: [number, number]) => {
     setLocalValue(next);
-  }, []);
+  };
 
-  // Update local value while dragging, but only notify parent when user releases.
-  const handleValueCommit = useCallback(
-    (next: [number, number]) => {
-      onChange?.(next);
-    },
-    [onChange]
-  );
-
-  const [currentMin, currentMax] = localValue;
+  const handleValueCommit = (next: [number, number]) => {
+    onChange?.(next);
+  };
 
   return (
     <Field className="space-y-1">

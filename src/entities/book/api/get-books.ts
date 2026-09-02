@@ -1,7 +1,6 @@
 import { Book } from '@/src/entities/book';
 import { createPublicClient } from '@/src/shared/configs/index.server';
-import { BOOKS_PAGE_SIZE } from '../model/constants';
-import { PriceRange } from '../model/types';
+import type { PriceRange } from '@/src/shared/types';
 
 type PaginationMeta = {
   page: number;
@@ -17,12 +16,14 @@ export const getBooks = async ({
   search,
   language,
   priceRange,
+  onlyInStock = false,
   page = 1,
-  pageSize = BOOKS_PAGE_SIZE,
+  pageSize = 20,
 }: {
   search: string | null;
   language: string | null;
   priceRange?: PriceRange | null;
+  onlyInStock?: boolean;
   page?: number | null;
   pageSize?: number;
 }): Promise<GetBooksResult> => {
@@ -52,6 +53,10 @@ export const getBooks = async ({
       countQuery = countQuery.lte('price', priceRange[1]);
     }
 
+    if (onlyInStock) {
+      countQuery = countQuery.gt('quantity', 0);
+    }
+
     const { count, error: countError } = await countQuery;
 
     if (countError) {
@@ -78,6 +83,10 @@ export const getBooks = async ({
 
     if (priceRange?.[1] !== undefined && priceRange?.[1] !== null) {
       dataQuery = dataQuery.lte('price', priceRange[1]);
+    }
+
+    if (onlyInStock) {
+      dataQuery = dataQuery.gt('quantity', 0);
     }
 
     const { data, error } = await dataQuery.range(from, from + normalizedPageSize - 1);

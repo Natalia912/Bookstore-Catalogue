@@ -5,7 +5,7 @@ import {
   BooksListErrorState,
   BooksListLoadingState,
 } from './books-list-states';
-import { getBooks } from '../api/get-books';
+import { getBooks } from '@/src/entities/book/index.server';
 import { BookFilters } from '@/src/features/book-filters';
 import { BookPagination } from '@/src/features/book-pagination';
 import { useBooksListView } from '../model/use-books-list-view';
@@ -34,7 +34,7 @@ function BooksListShell({
       <section>
         <BookFilters priceBounds={priceBounds} />
       </section>
-      {children}
+      <Suspense fallback={<BooksListLoadingState />}>{children}</Suspense>
     </main>
   );
 }
@@ -58,6 +58,7 @@ function BooksListView({ searchParams, priceBounds }: BooksListViewProps) {
       priceRange,
       page: currentPage,
       pageSize,
+      onlyInStock: true
     })
   );
 
@@ -87,11 +88,9 @@ function BooksListView({ searchParams, priceBounds }: BooksListViewProps) {
   return (
     <BooksListShell priceBounds={priceBounds}>
       <section>
-        <Suspense fallback={<BooksListLoadingState />}>
-          <div key={filtersKey}>
-            <BookGrid books={booksResult.data} />
-          </div>
-        </Suspense>
+        <div key={filtersKey}>
+          <BookGrid books={booksResult.data} />
+        </div>
       </section>
       <BookPagination
         currentPage={pageForDisplay}
