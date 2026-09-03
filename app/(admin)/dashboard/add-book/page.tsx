@@ -1,7 +1,5 @@
+import { AddBookView } from '@/src/views/add-book-view';
+
 export default function AddBookPage() {
-  return (
-    <div>
-      <h1>Add Book Page</h1>
-    </div>
-  );
+  return <AddBookView />;
 }
