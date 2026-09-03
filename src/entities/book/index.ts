@@ -5,6 +5,7 @@ export {
   type Book,
   type CreateBookInput,
   bookSchema,
+  addBookSchema,
   updateBookSchema,
 } from './model';
 

@@ -12,4 +12,18 @@ export const bookSchema = z.object({
   category: z.string().trim().nullable().optional(),
 });
 
+export const addBookSchema = bookSchema
+  .pick({
+    title: true,
+    author: true,
+    language: true,
+    price: true,
+    quantity: true,
+    isbn: true,
+    category: true,
+  })
+  .extend({
+    cover_file: z.instanceof(File).optional(),
+  });
+
 export const updateBookSchema = bookSchema.partial();

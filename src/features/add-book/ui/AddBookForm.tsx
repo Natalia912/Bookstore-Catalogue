@@ -1,9 +1,8 @@
 'use client';
 
-import { Controller, useForm, type Resolver } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller } from 'react-hook-form';
 
-import { bookSchema, type CreateBookInput, languageOptions } from '@/src/entities/book';
+import { type CreateBookInput, languageOptions } from '@/src/entities/book';
 import {
   Button,
   Field,
@@ -18,80 +17,97 @@ import {
   SelectItem,
   SelectTrigger,
 } from '@/src/shared/components';
-import { addBook } from '../api';
-import { toast } from 'sonner';
+import { useAddBook } from '../model/use-add-book';
+import Image from 'next/image';
 
 export function AddBookForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    control,
-    reset,
-  } = useForm<CreateBookInput>({
-    resolver: zodResolver(bookSchema) as Resolver<CreateBookInput>,
-    defaultValues: {
-      language: languageOptions[0].value,
-      quantity: 1,
-      cover_url: null,
-    },
-  });
-
-  async function onSubmit(data: CreateBookInput) {
-    const t = toast.loading('Saving book...');
-    const result = await addBook(data);
-
-    if (result.success) {
-      reset();
-      toast.success('Book added successfully!', { id: t });
-    } else {
-      toast.error(result.error, { id: t });
-    }
-  }
+  const { register, handleSubmit, errors, isSubmitting, control, onSubmit, coverFile, setValue } =
+    useAddBook();
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-md space-y-6 p-6">
-      <FieldLegend>Add a book</FieldLegend>
+    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto w-full space-y-6">
+      <FieldLegend>Enter book details</FieldLegend>
       <FieldDescription>
         Fill in the details of the book you want to add to the catalogue.
       </FieldDescription>
 
-      <Field>
-        <FieldLabel htmlFor="title">
-          Title
-          <FieldRequiredSign />
-        </FieldLabel>
-        <Input {...register('title')} id="title" placeholder="Book title" required />
-        <FieldError>{errors.title?.message}</FieldError>
-      </Field>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field>
+          <FieldLabel htmlFor="title">
+            Title
+            <FieldRequiredSign />
+          </FieldLabel>
+          <Input {...register('title')} id="title" placeholder="Book title" required />
+          <FieldError>{errors.title?.message}</FieldError>
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="author">Author</FieldLabel>
+          <Input {...register('author')} id="author" placeholder="Author name" />
+          <FieldError>{errors.author?.message}</FieldError>
+        </Field>
+      </div>
 
       <Field>
-        <FieldLabel htmlFor="author">Author</FieldLabel>
-        <Input {...register('author')} id="author" placeholder="Author name" />
-        <FieldError>{errors.author?.message}</FieldError>
-      </Field>
+        <FieldLabel htmlFor="cover_file">Cover Cover Image</FieldLabel>
+        {/* Add cover image preview */}
+        {coverFile && (
+          <>
+            <div className="h-60">
+              <Image
+                src={coverFile ? URL.createObjectURL(new Blob([coverFile])) : ''}
+                alt="Cover Preview"
+                width={128}
+                height={160}
+                className="aspect-2/3 h-full w-auto object-cover"
+              />
+            </div>
+            <Button
+              variant="destructive"
+              type="button"
+              size="sm"
+              className="mb-2 max-w-40"
+              onClick={() => setValue('cover_file', undefined)}
+            >
+              Remove image
+            </Button>
+          </>
+        )}
 
-      <Field>
-        <FieldLabel htmlFor="isbn">ISBN</FieldLabel>
-        <Input {...register('isbn')} id="isbn" placeholder="978-0-123456-78-9" />
-        <FieldError>{errors.isbn?.message}</FieldError>
-      </Field>
-
-      <Field>
-        <FieldLabel htmlFor="category">Category</FieldLabel>
-        <Input {...register('category')} id="category" placeholder="Fiction" />
-        <FieldError>{errors.category?.message}</FieldError>
-      </Field>
-
-      <Field>
-        <FieldLabel htmlFor="cover_url">Cover URL</FieldLabel>
-        <Input
-          {...register('cover_url')}
-          id="cover_url"
-          placeholder="https://example.com/cover.jpg"
+        <Controller
+          control={control}
+          name="cover_file"
+          render={({ field: { onChange, onBlur, name } }) => (
+            <Input
+              id="cover_file"
+              type="file"
+              accept="image/*"
+              name={name}
+              onBlur={onBlur}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                onChange(file);
+              }}
+            />
+          )}
         />
-        <FieldError>{errors.cover_url?.message}</FieldError>
+
+        <FieldError>{errors.cover_file?.message}</FieldError>
       </Field>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field>
+          <FieldLabel htmlFor="isbn">ISBN</FieldLabel>
+          <Input {...register('isbn')} id="isbn" placeholder="978-0-123456-78-9" />
+          <FieldError>{errors.isbn?.message}</FieldError>
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="category">Category</FieldLabel>
+          <Input {...register('category')} id="category" placeholder="Fiction" />
+          <FieldError>{errors.category?.message}</FieldError>
+        </Field>
+      </div>
 
       <Field>
         <FieldLabel htmlFor="language">Language</FieldLabel>
