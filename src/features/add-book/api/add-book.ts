@@ -11,22 +11,13 @@ type AddBookResult = ApiResult;
 
 export const addBook = async (book: CreateBookInput): Promise<AddBookResult> => {
   let res: Response;
-  const formData = new FormData();
-
-  formData.append('title', book.title);
-  if (book.author) formData.append('author', book.author);
-  formData.append('language', book.language);
-  if (book.price != null) formData.append('price', String(book.price));
-  formData.append('quantity', String(book.quantity));
-  if (book.isbn) formData.append('isbn', book.isbn);
-  if (book.category) formData.append('category', book.category);
-  if (book.cover_file) formData.append('cover_file', book.cover_file);
 
   try {
     const url = new URL('/api/books', getApiBaseUrl());
     res = await fetch(url.toString(), {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(book),
     });
   } catch {
     return { success: false, error: 'Network error. Please try again.' };

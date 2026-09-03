@@ -15,5 +15,5 @@ export interface Book {
   category: string | null;
 }
 
-export type CreateBookInput = z.infer<typeof import('./schemas').addBookSchema>;
+export type CreateBookInput = z.infer<typeof import('./schemas').bookSchema>;
 export type UpdateBookInput = z.infer<typeof import('./schemas').updateBookSchema>;
