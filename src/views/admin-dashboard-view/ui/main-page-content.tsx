@@ -1,4 +1,3 @@
-import { type Book } from '@/src/entities/book';
 import { BookFilters } from '@/src/features/book-filters';
 import { BookPagination } from '@/src/features/book-pagination';
 import { Button, Card, CardContent } from '@/src/shared/components';
