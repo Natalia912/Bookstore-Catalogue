@@ -25,8 +25,7 @@ export function useDeleteBook() {
       toast.success('Book deleted successfully');
       router.refresh();
       return true;
-    } catch (error) {
-      console.error('Error deleting book:', error);
+    } catch {
       toast.error('Network error. Failed to delete book.');
       return false;
     } finally {

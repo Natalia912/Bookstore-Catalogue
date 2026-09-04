@@ -47,8 +47,7 @@ export function useLogin() {
         // window.location here used deliberately to force a full page reload and ensure the session is properly set in the browser.
         window.location.assign('/dashboard');
       }
-    } catch (e) {
-      console.error(e);
+    } catch {
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
