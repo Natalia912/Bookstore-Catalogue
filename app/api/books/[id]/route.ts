@@ -1,5 +1,5 @@
 import { deleteBook, getBook, updateBook } from '@/src/entities/book/index.server';
-import { type CreateBookInput, updateBookSchema } from '@/src/entities/book';
+import { updateBookSchema } from '@/src/entities/book';
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 
@@ -18,7 +18,26 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const body: Partial<CreateBookInput> = await request.json();
+  const contentType = request.headers.get('content-type') ?? '';
+  let body: Record<string, unknown>;
+
+  if (contentType.includes('multipart/form-data')) {
+    const formData = await request.formData();
+    body = {
+      title: formData.get('title') || undefined,
+      author: formData.get('author') || undefined,
+      language: formData.get('language') || undefined,
+      price: formData.has('price') && formData.get('price') !== '' ? Number(formData.get('price')) : undefined,
+      quantity: formData.has('quantity') && formData.get('quantity') !== '' ? Number(formData.get('quantity')) : undefined,
+      isbn: formData.get('isbn') || undefined,
+      category: formData.get('category') || undefined,
+      cover_file: formData.get('cover_file') instanceof File && (formData.get('cover_file') as File).size > 0 ? formData.get('cover_file') : undefined,
+      remove_cover: formData.get('remove_cover') === 'true' ? true : undefined,
+    };
+  } else {
+    body = await request.json();
+  }
+
   const res = updateBookSchema.safeParse(body);
 
   if (!res.success) {
