@@ -4,6 +4,7 @@ export {
   type Language,
   type Book,
   type CreateBookInput,
+  type UpdateBookInput,
   bookSchema,
   addBookSchema,
   updateBookSchema,

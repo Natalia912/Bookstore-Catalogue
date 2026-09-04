@@ -26,4 +26,7 @@ export const addBookSchema = bookSchema
     cover_file: z.instanceof(File).optional(),
   });
 
-export const updateBookSchema = bookSchema.partial();
+export const updateBookSchema = bookSchema.partial().extend({
+  cover_file: z.instanceof(File).optional(),
+  remove_cover: z.boolean().optional(),
+});
