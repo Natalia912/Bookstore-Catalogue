@@ -9,13 +9,16 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'llyofgpebxcuodtnacsc.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.CF_PAGES_URL,
-  },
-  experimental: {
-    cacheComponents: true,
   },
 };
 

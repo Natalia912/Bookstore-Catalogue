@@ -1,7 +1,6 @@
 import { Book } from '@/src/entities/book';
 import { createPublicClient } from '@/src/shared/configs/index.server';
 import type { PriceRange } from '@/src/shared/types';
-import { cacheTag } from 'next/cache';
 
 type PaginationMeta = {
   page: number;
@@ -28,8 +27,6 @@ export const getBooks = async ({
   page?: number | null;
   pageSize?: number;
 }): Promise<GetBooksResult> => {
-  'use cache'
-  cacheTag('books-list')
   try {
     const supabase = createPublicClient();
     const normalizedPage = Number.isFinite(Number(page)) ? Math.max(1, Number(page)) : 1;
@@ -98,9 +95,16 @@ export const getBooks = async ({
       return { success: false, error: error.message };
     }
 
+    const dataWithPublicUrls = data?.map((book) => ({
+      ...book,
+      cover_url: book.cover_url?.startsWith('covers/')
+        ? supabase.storage.from('covers').getPublicUrl(book.cover_url).data.publicUrl
+        : book.cover_url,
+    }));
+
     return {
       success: true,
-      data: data ?? [],
+      data: dataWithPublicUrls ?? [],
       pagination: {
         page: safePage,
         pageSize: normalizedPageSize,
