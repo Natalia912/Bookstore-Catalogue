@@ -31,7 +31,6 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  revalidateTag('books-list', 'max');
   revalidatePath('/dashboard');
 
   return NextResponse.json({ book: data });
@@ -48,7 +47,6 @@ export async function DELETE(
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  revalidateTag('books-list', 'max');
   revalidatePath('/dashboard');
 
   return NextResponse.json({ success: true });

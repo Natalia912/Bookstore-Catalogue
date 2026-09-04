@@ -103,43 +103,37 @@ export function AddBookForm() {
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="category">Category</FieldLabel>
-          <Input {...register('category')} id="category" placeholder="Fiction" />
-          <FieldError>{errors.category?.message}</FieldError>
+          <FieldLabel htmlFor="language">Language</FieldLabel>
+          <Controller
+            name="language"
+            control={control}
+            render={({ field }) => {
+              const selectedLanguageLabel =
+                languageOptions.find((option) => option.value === field.value)?.label ??
+                'Select a language';
+
+              return (
+                <Select
+                  value={field.value}
+                  onValueChange={(value) => field.onChange(value as CreateBookInput['language'])}
+                >
+                  <SelectTrigger id="language" className="w-full">
+                    <span>{selectedLanguageLabel}</span>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {languageOptions.map((option) => (
+                      <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              );
+            }}
+          />
+          <FieldError>{errors.language?.message}</FieldError>
         </Field>
       </div>
-
-      <Field>
-        <FieldLabel htmlFor="language">Language</FieldLabel>
-        <Controller
-          name="language"
-          control={control}
-          render={({ field }) => {
-            const selectedLanguageLabel =
-              languageOptions.find((option) => option.value === field.value)?.label ??
-              'Select a language';
-
-            return (
-              <Select
-                value={field.value}
-                onValueChange={(value) => field.onChange(value as CreateBookInput['language'])}
-              >
-                <SelectTrigger id="language" className="w-full">
-                  <span>{selectedLanguageLabel}</span>
-                </SelectTrigger>
-                <SelectContent>
-                  {languageOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            );
-          }}
-        />
-        <FieldError>{errors.language?.message}</FieldError>
-      </Field>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field>

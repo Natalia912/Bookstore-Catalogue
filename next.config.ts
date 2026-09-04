@@ -20,9 +20,6 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.CF_PAGES_URL,
   },
-  experimental: {
-    cacheComponents: true,
-  },
 };
 
 export default nextConfig;

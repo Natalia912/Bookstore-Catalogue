@@ -1,8 +1,6 @@
 import { BooksListView } from '@/src/views/books-user-view';
 import { getBooksPriceBounds } from '@/src/entities/book/index.server';
 
-export const instant = false;
-
 type SearchParams = Promise<{
   search?: string;
   language?: string;
