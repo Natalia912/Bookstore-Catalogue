@@ -22,9 +22,17 @@ export default function BookCard({ book, onClick }: Props) {
 
   return (
     <Card
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
       size="sm"
-      className="h-full cursor-pointer gap-0 overflow-hidden p-0 transition-shadow hover:shadow-md"
+      className="h-full cursor-pointer gap-0 overflow-hidden p-0 transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <div className="bg-muted relative flex aspect-2/3 max-h-60 w-full items-center justify-center">
         {cover_url ? (
