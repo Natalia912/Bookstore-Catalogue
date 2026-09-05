@@ -10,7 +10,7 @@ import {
 import { SearchIcon, X } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
 
-import { useTranslations } from 'next-intl';
+import { useSafeTranslations } from '@/src/shared/configs/i18n';
 
 function Search({
   value,
@@ -23,7 +23,7 @@ function Search({
   onChange: (query: string) => void;
   onSearch: (query: string) => void;
 }) {
-  const t = useTranslations('bookFilters.search');
+  const t = useSafeTranslations('bookFilters.search');
   const inputId = useId();
 
   const inputRef = useRef<HTMLInputElement>(null);
