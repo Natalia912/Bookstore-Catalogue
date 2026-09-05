@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useSafeTranslations } from '@/src/shared/configs/i18n';
 import {
   Button,
   Collapsible,
@@ -22,7 +22,7 @@ type Props = {
 };
 
 function ResetButton({ onReset, isLoading }: { onReset: () => void; isLoading: boolean }) {
-  const t = useTranslations('bookFilters');
+  const t = useSafeTranslations('bookFilters');
   return (
     <div className="relative flex flex-row-reverse">
       <Button
@@ -43,7 +43,7 @@ function ResetButton({ onReset, isLoading }: { onReset: () => void; isLoading: b
 }
 
 function LayoutWrapper({ search, select, slider, onReset, isLoading }: Props) {
-  const t = useTranslations('bookFilters.toggle');
+  const t = useSafeTranslations('bookFilters.toggle');
   const [open, setOpen] = useState(false);
 
   return (

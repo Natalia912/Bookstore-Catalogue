@@ -7,7 +7,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/src/shared/components';
-import { useTranslations } from 'next-intl';
+import { useSafeTranslations } from '@/src/shared/configs/i18n';
 
 type BookPaginationProps = {
   currentPage: number;
@@ -16,7 +16,7 @@ type BookPaginationProps = {
 };
 
 function BookPagination({ currentPage, totalPages, buildPageHref }: BookPaginationProps) {
-  const t = useTranslations('pagination');
+  const t = useSafeTranslations('pagination');
 
   if (totalPages <= 1) {
     return null;

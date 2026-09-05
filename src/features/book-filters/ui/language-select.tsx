@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useSafeTranslations } from '@/src/shared/configs/i18n';
 import { Language, languageOptions } from '@/src/entities/book';
 import {
   Select,
@@ -22,7 +22,7 @@ function LanguageSelect({
   onSelect: (lang: Language | null) => void;
   disabled?: boolean;
 }) {
-  const t = useTranslations('bookFilters.language');
+  const t = useSafeTranslations('bookFilters.language');
   const [localLanguage, setLocalLanguage] = useState<Language | null>(language);
 
   const [prevLanguage, setPrevLanguage] = useState(language);

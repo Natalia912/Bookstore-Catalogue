@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useSafeTranslations } from '@/src/shared/configs/i18n';
 import { Field, FieldDescription, FieldLabel, Slider } from '@/src/shared/components';
 import { PriceRange } from '@/src/shared/types';
 
@@ -20,7 +20,7 @@ function PriceSlider({
   value: PriceRange;
   onChange: (value: PriceRange) => void;
 }) {
-  const t = useTranslations('bookFilters.price');
+  const t = useSafeTranslations('bookFilters.price');
   const labelId = useId();
   const descriptionId = useId();
 

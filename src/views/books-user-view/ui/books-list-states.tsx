@@ -8,10 +8,10 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/src/shared/components';
-import { useTranslations } from 'next-intl';
+import { useSafeTranslations } from '@/src/shared/configs/i18n';
 
 function BooksListEmptyState({ hasFilters }: { hasFilters: boolean }) {
-  const t = useTranslations('booksListView.emptyState');
+  const t = useSafeTranslations('booksListView.emptyState');
 
   return (
     <Empty className="min-h-72">
@@ -33,7 +33,7 @@ function BooksListEmptyState({ hasFilters }: { hasFilters: boolean }) {
 }
 
 function BooksListErrorState({ error }: { error: string }) {
-  const t = useTranslations('booksListView.errorState');
+  const t = useSafeTranslations('booksListView.errorState');
 
   return (
     <Empty className="min-h-72">
