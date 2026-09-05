@@ -2,7 +2,6 @@ import { Card, CardContent, Badge, CardDescription, CardTitle } from '@/src/shar
 import { BookOpen } from 'lucide-react';
 import { Book, formatPrice } from '@/src/entities/book';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
 
 const LANGUAGE_LABELS = {
   ru: 'ru',
@@ -17,10 +16,7 @@ type Props = {
 };
 
 export default function BookCard({ book, onClick }: Props) {
-  const t = useTranslations('bookCard');
-  const { title, author, language = 'ru', price, quantity = 0, cover_url } = book;
-
-  const inStock = quantity > 0;
+  const { title, author, language = 'ru', price, cover_url } = book;
 
   return (
     <Card
@@ -34,7 +30,7 @@ export default function BookCard({ book, onClick }: Props) {
         }
       }}
       size="sm"
-      className="h-full cursor-pointer gap-0 overflow-hidden p-0 transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="focus-visible:ring-ring h-full cursor-pointer gap-0 overflow-hidden p-0 transition-all hover:shadow-md focus-visible:ring-2 focus-visible:outline-none"
     >
       <div className="bg-muted relative flex aspect-2/3 max-h-60 w-full items-center justify-center">
         {cover_url ? (
@@ -58,10 +54,9 @@ export default function BookCard({ book, onClick }: Props) {
         <CardTitle>{title}</CardTitle>
         {author && <CardDescription>{author}</CardDescription>}
 
-        <div className="mt-auto flex items-center justify-between pt-2 md:pt-4">
-          <span className="text-sm font-medium">{formatPrice(price) ?? '—'}</span>
-          <span className={'text-xs ' + (inStock ? 'text-emerald-600' : 'text-muted-foreground')}>
-            {inStock ? t('inStock', { quantity }) : t('outOfStock')}
+        <div className="mt-auto flex items-start justify-between pt-2 md:pt-4">
+          <span className="text-sm font-medium max-sm:flex-[1_1_0%]">
+            {formatPrice(price) ?? '—'}
           </span>
         </div>
       </CardContent>
