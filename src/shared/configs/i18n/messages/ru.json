@@ -1,0 +1,73 @@
+{
+  "homepage": {
+    "title": "Книги"
+  },
+  "booksListView": {
+    "emptyState": {
+      "noMatchingTitle": "Нет книг, соответствующих вашим фильтрам",
+      "noMatchingDescription": "Попробуйте сбросить один или несколько фильтров, чтобы снова увидеть все книги.",
+      "noAvailableTitle": "Книги пока недоступны",
+      "noAvailableDescription": "Новые книги появятся здесь, как только они будут добавлены в каталог."
+    },
+    "errorState": {
+      "title": "Что-то пошло не так"
+    }
+  },
+  "bookFilters": {
+    "search": {
+      "label": "Поиск",
+      "placeholder": "Поиск по названию или автору",
+      "clearAriaLabel": "Очистить поиск"
+    },
+    "language": {
+      "placeholder": "Выберите язык",
+      "label": "Языки",
+      "options": {
+        "ru": "Русский",
+        "kk": "Казахский",
+        "en": "Английский",
+        "other": "Другой"
+      }
+    },
+    "price": {
+      "label": "Диапазон цен",
+      "description": "Настройте минимальную и максимальную цену, чтобы сузить результаты поиска."
+    },
+    "toggle": {
+      "showAriaLabel": "Показать фильтры",
+      "hideAriaLabel": "Скрыть фильтры"
+    },
+    "reset": "Сбросить"
+  },
+  "languageSwitcher": {
+    "placeholder": "Выберите язык"
+  },
+  "pagination": {
+    "ariaLabel": "пагинация",
+    "previous": "Назад",
+    "previousAriaLabel": "Перейти на предыдущую страницу",
+    "next": "Вперед",
+    "nextAriaLabel": "Перейти на следующую страницу",
+    "morePages": "Больше страниц"
+  },
+  "bookCard": {
+    "inStock": "в наличии · {quantity}",
+    "outOfStock": "нет в наличии"
+  },
+  "bookDetails": {
+    "noCoverImage": "Нет обложки",
+    "byAuthor": "автор: {author}",
+    "inStock": "В наличии ({quantity})",
+    "outOfStock": "Нет в наличии",
+    "languageLabel": "Язык:",
+    "categoryLabel": "Категория:",
+    "isbnLabel": "ISBN:",
+    "languages": {
+      "ru": "Русский (ru)",
+      "kk": "Казахский (kk)",
+      "en": "Английский (en)",
+      "other": "Другой"
+    }
+  }
+}
+

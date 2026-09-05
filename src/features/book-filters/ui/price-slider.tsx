@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useId, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Field, FieldDescription, FieldLabel, Slider } from '@/src/shared/components';
 import { PriceRange } from '@/src/shared/types';
 
@@ -19,6 +20,7 @@ function PriceSlider({
   value: PriceRange;
   onChange: (value: PriceRange) => void;
 }) {
+  const t = useTranslations('bookFilters.price');
   const labelId = useId();
   const descriptionId = useId();
 
@@ -43,11 +45,11 @@ function PriceSlider({
     <Field className="space-y-1">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <FieldLabel htmlFor={labelId} className="text-sm font-medium">
-          Price range
+          {t('label')}
         </FieldLabel>
       </div>
       <FieldDescription id={descriptionId} className="sr-only">
-        Adjust the minimum and maximum price to narrow search results.
+        {t('description')}
       </FieldDescription>
       <Slider
         id={labelId}

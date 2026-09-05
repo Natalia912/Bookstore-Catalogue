@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   Button,
   Collapsible,
@@ -21,6 +22,7 @@ type Props = {
 };
 
 function ResetButton({ onReset, isLoading }: { onReset: () => void; isLoading: boolean }) {
+  const t = useTranslations('bookFilters');
   return (
     <div className="relative flex flex-row-reverse">
       <Button
@@ -31,7 +33,7 @@ function ResetButton({ onReset, isLoading }: { onReset: () => void; isLoading: b
         className="whitespace-nowrap md:self-start lg:self-center"
         data-testid="reset-filters-button"
       >
-        Reset
+        {t('reset')}
       </Button>
       {isLoading && (
         <Spinner className="text-primary absolute top-1/2 right-14 size-5 -translate-1/2 lg:-right-10" />
@@ -41,6 +43,7 @@ function ResetButton({ onReset, isLoading }: { onReset: () => void; isLoading: b
 }
 
 function LayoutWrapper({ search, select, slider, onReset, isLoading }: Props) {
+  const t = useTranslations('bookFilters.toggle');
   const [open, setOpen] = useState(false);
 
   return (
@@ -53,7 +56,7 @@ function LayoutWrapper({ search, select, slider, onReset, isLoading }: Props) {
               render={
                 <Button
                   variant="ghost"
-                  aria-label={open ? 'Hide filters' : 'Show filters'}
+                  aria-label={open ? t('hideAriaLabel') : t('showAriaLabel')}
                   className={cn(open && 'border-foreground', 'lg:hidden')}
                 >
                   <FilterIcon />

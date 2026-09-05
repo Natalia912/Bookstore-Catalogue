@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Language, languageOptions } from '@/src/entities/book';
 import {
   Select,
@@ -21,6 +22,7 @@ function LanguageSelect({
   onSelect: (lang: Language | null) => void;
   disabled?: boolean;
 }) {
+  const t = useTranslations('bookFilters.language');
   const [localLanguage, setLocalLanguage] = useState<Language | null>(language);
 
   const [prevLanguage, setPrevLanguage] = useState(language);
@@ -47,14 +49,14 @@ function LanguageSelect({
       onValueChange={handleValueChange}
     >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Select language" />
+        <SelectValue placeholder={t('placeholder')} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Languages</SelectLabel>
+          <SelectLabel>{t('label')}</SelectLabel>
           {languageOptions.map((item) => (
             <SelectItem key={item.value} value={item.value}>
-              {item.label}
+              {t(`options.${item.value}`)}
             </SelectItem>
           ))}
         </SelectGroup>

@@ -10,6 +10,8 @@ import {
 import { SearchIcon, X } from 'lucide-react';
 import { useEffect, useId, useRef } from 'react';
 
+import { useTranslations } from 'next-intl';
+
 function Search({
   value,
   disabled,
@@ -21,6 +23,7 @@ function Search({
   onChange: (query: string) => void;
   onSearch: (query: string) => void;
 }) {
+  const t = useTranslations('bookFilters.search');
   const inputId = useId();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -55,14 +58,14 @@ function Search({
   return (
     <Field>
       <FieldLabel htmlFor={inputId} className="sr-only">
-        Search
+        {t('label')}
       </FieldLabel>
       <InputGroup>
         <InputGroupInput
           id={inputId}
           disabled={disabled}
           ref={inputRef}
-          placeholder="Search for title or author"
+          placeholder={t('placeholder')}
           role="searchbox"
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -79,7 +82,7 @@ function Search({
               variant="ghost"
               size="icon"
               onClick={handleClear}
-              aria-label="Clear search"
+              aria-label={t('clearAriaLabel')}
               className="absolute top-1/2 right-1 h-6 w-6 -translate-y-1/2 p-0"
             >
               <X className="h-3.5 w-3.5" />
