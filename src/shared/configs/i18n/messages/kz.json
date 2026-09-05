@@ -1,0 +1,73 @@
+{
+  "homepage": {
+    "title": "Кітаптар"
+  },
+  "booksListView": {
+    "emptyState": {
+      "noMatchingTitle": "Сүзгілерге сәйкес келетін кітаптар табылмады",
+      "noMatchingDescription": "Барлық кітаптарды қайта көру үшін сүзгілерді тазалап көріңіз.",
+      "noAvailableTitle": "Кітаптар әлі қолжетімсіз",
+      "noAvailableDescription": "Жаңа кітаптар каталогқа қосылған бойда осында пайда болады."
+    },
+    "errorState": {
+      "title": "Бірдеңе қате кетті"
+    }
+  },
+  "bookFilters": {
+    "search": {
+      "label": "Іздеу",
+      "placeholder": "Атауы немесе авторы бойынша іздеу",
+      "clearAriaLabel": "Іздеуді тазалау"
+    },
+    "language": {
+      "placeholder": "Тілді таңдаңыз",
+      "label": "Тілдер",
+      "options": {
+        "ru": "Орыс тілі",
+        "kk": "Қазақ тілі",
+        "en": "Ағылшын тілі",
+        "other": "Басқа"
+      }
+    },
+    "price": {
+      "label": "Баға аралығы",
+      "description": "Іздеу нәтижелерін тарылту үшін ең төменгі және ең жоғарғы бағаны реттеңіз."
+    },
+    "toggle": {
+      "showAriaLabel": "Сүзгілерді көрсету",
+      "hideAriaLabel": "Сүзгілерді жасыру"
+    },
+    "reset": "Қайтару"
+  },
+  "languageSwitcher": {
+    "placeholder": "Тілді таңдаңыз"
+  },
+  "pagination": {
+    "ariaLabel": "беттер",
+    "previous": "Артқа",
+    "previousAriaLabel": "Алдыңғы бетке өту",
+    "next": "Алға",
+    "nextAriaLabel": "Келесі бетке өту",
+    "morePages": "Көбірек беттер"
+  },
+  "bookCard": {
+    "inStock": "қоймада бар · {quantity}",
+    "outOfStock": "қоймада жоқ"
+  },
+  "bookDetails": {
+    "noCoverImage": "Мұқаба суреті жоқ",
+    "byAuthor": "авторы: {author}",
+    "inStock": "Қоймада бар ({quantity})",
+    "outOfStock": "Қоймада жоқ",
+    "languageLabel": "Тіл:",
+    "categoryLabel": "Санат:",
+    "isbnLabel": "ISBN:",
+    "languages": {
+      "ru": "Орыс тілі (ru)",
+      "kk": "Қазақ тілі (kk)",
+      "en": "Ағылшын тілі (en)",
+      "other": "Басқа"
+    }
+  }
+}
+

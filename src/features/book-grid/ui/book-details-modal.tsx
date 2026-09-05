@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import { BookOpen, Tag, Barcode, Globe, PackageCheck, PackageX } from 'lucide-react';
 import {
   Dialog,
@@ -12,13 +13,6 @@ import {
 } from '@/src/shared/components';
 import { Book, formatPrice } from '@/src/entities/book';
 
-const LANGUAGE_LABELS: Record<string, string> = {
-  ru: 'Russian (ru)',
-  kk: 'Kazakh (kk)',
-  en: 'English (en)',
-  other: 'Other',
-};
-
 type BookDetailsModalProps = {
   book: Book | null;
   open: boolean;
@@ -26,6 +20,8 @@ type BookDetailsModalProps = {
 };
 
 export function BookDetailsModal({ book, open, onOpenChange }: BookDetailsModalProps) {
+  const t = useTranslations('bookDetails');
+
   if (!book) return null;
 
   const { title, author, language = 'ru', price, quantity = 0, cover_url, isbn, category } = book;
@@ -51,7 +47,7 @@ export function BookDetailsModal({ book, open, onOpenChange }: BookDetailsModalP
               ) : (
                 <div className="flex flex-col items-center justify-center text-muted-foreground p-6">
                   <BookOpen className="h-16 w-16 mb-2 stroke-[1.25]" />
-                  <span className="text-xs">No cover image</span>
+                  <span className="text-xs">{t('noCoverImage')}</span>
                 </div>
               )}
             </div>
@@ -65,8 +61,8 @@ export function BookDetailsModal({ book, open, onOpenChange }: BookDetailsModalP
                   {title}
                 </DialogTitle>
                 {author && (
-                  <DialogDescription className="text-base text-muted-foreground font-medium pt-1">
-                    by {author}
+                  <DialogDescription className="text-base text-muted-foreground font-medium">
+                    {t('byAuthor', { author })}
                   </DialogDescription>
                 )}
               </DialogHeader>
@@ -86,12 +82,12 @@ export function BookDetailsModal({ book, open, onOpenChange }: BookDetailsModalP
                   {inStock ? (
                     <>
                       <PackageCheck className="h-3.5 w-3.5" />
-                      <span>In Stock ({quantity})</span>
+                      <span>{t('inStock', { quantity })}</span>
                     </>
                   ) : (
                     <>
                       <PackageX className="h-3.5 w-3.5" />
-                      <span>Out of Stock</span>
+                      <span>{t('outOfStock')}</span>
                     </>
                   )}
                 </Badge>
@@ -101,14 +97,14 @@ export function BookDetailsModal({ book, open, onOpenChange }: BookDetailsModalP
               <div className="border-t border-border pt-4 mt-4 space-y-2.5 text-sm">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Globe className="h-4 w-4 shrink-0 text-foreground/70" />
-                  <span className="font-medium text-foreground">Language:</span>
-                  <span>{LANGUAGE_LABELS[language] ?? language}</span>
+                  <span className="font-medium text-foreground">{t('languageLabel')}</span>
+                  <span>{t(`languages.${language}` as any)}</span>
                 </div>
 
                 {category && (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Tag className="h-4 w-4 shrink-0 text-foreground/70" />
-                    <span className="font-medium text-foreground">Category:</span>
+                    <span className="font-medium text-foreground">{t('categoryLabel')}</span>
                     <Badge variant="secondary" className="font-normal text-xs">
                       {category}
                     </Badge>
@@ -118,7 +114,7 @@ export function BookDetailsModal({ book, open, onOpenChange }: BookDetailsModalP
                 {isbn && (
                   <div className="flex items-center gap-2 text-muted-foreground">
                     <Barcode className="h-4 w-4 shrink-0 text-foreground/70" />
-                    <span className="font-medium text-foreground">ISBN:</span>
+                    <span className="font-medium text-foreground">{t('isbnLabel')}</span>
                     <span className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded">
                       {isbn}
                     </span>

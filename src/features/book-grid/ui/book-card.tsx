@@ -2,6 +2,7 @@ import { Card, CardContent, Badge, CardDescription, CardTitle } from '@/src/shar
 import { BookOpen } from 'lucide-react';
 import { Book, formatPrice } from '@/src/entities/book';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 const LANGUAGE_LABELS = {
   ru: 'ru',
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export default function BookCard({ book, onClick }: Props) {
+  const t = useTranslations('bookCard');
   const { title, author, language = 'ru', price, quantity = 0, cover_url } = book;
 
   const inStock = quantity > 0;
@@ -59,7 +61,7 @@ export default function BookCard({ book, onClick }: Props) {
         <div className="mt-auto flex items-center justify-between pt-2 md:pt-4">
           <span className="text-sm font-medium">{formatPrice(price) ?? '—'}</span>
           <span className={'text-xs ' + (inStock ? 'text-emerald-600' : 'text-muted-foreground')}>
-            {inStock ? `in stock · ${quantity}` : 'out of stock'}
+            {inStock ? t('inStock', { quantity }) : t('outOfStock')}
           </span>
         </div>
       </CardContent>

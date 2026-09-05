@@ -1,0 +1,73 @@
+{
+  "homepage": {
+    "title": "Books"
+  },
+  "booksListView": {
+    "emptyState": {
+      "noMatchingTitle": "No books match your filters",
+      "noMatchingDescription": "Try clearing one or more filters to see all books again.",
+      "noAvailableTitle": "No books available yet",
+      "noAvailableDescription": "New books will appear here once they are added to the catalogue."
+    },
+    "errorState": {
+      "title": "Something went wrong"
+    }
+  },
+  "bookFilters": {
+    "search": {
+      "label": "Search",
+      "placeholder": "Search for title or author",
+      "clearAriaLabel": "Clear search"
+    },
+    "language": {
+      "placeholder": "Select language",
+      "label": "Languages",
+      "options": {
+        "ru": "Russian",
+        "kk": "Kazakh",
+        "en": "English",
+        "other": "Other"
+      }
+    },
+    "price": {
+      "label": "Price range",
+      "description": "Adjust the minimum and maximum price to narrow search results."
+    },
+    "toggle": {
+      "showAriaLabel": "Show filters",
+      "hideAriaLabel": "Hide filters"
+    },
+    "reset": "Reset"
+  },
+  "languageSwitcher": {
+    "placeholder": "Select language"
+  },
+  "pagination": {
+    "ariaLabel": "pagination",
+    "previous": "Previous",
+    "previousAriaLabel": "Go to previous page",
+    "next": "Next",
+    "nextAriaLabel": "Go to next page",
+    "morePages": "More pages"
+  },
+  "bookCard": {
+    "inStock": "in stock · {quantity}",
+    "outOfStock": "out of stock"
+  },
+  "bookDetails": {
+    "noCoverImage": "No cover image",
+    "byAuthor": "by {author}",
+    "inStock": "In Stock ({quantity})",
+    "outOfStock": "Out of Stock",
+    "languageLabel": "Language:",
+    "categoryLabel": "Category:",
+    "isbnLabel": "ISBN:",
+    "languages": {
+      "ru": "Russian (ru)",
+      "kk": "Kazakh (kk)",
+      "en": "English (en)",
+      "other": "Other"
+    }
+  }
+}
+

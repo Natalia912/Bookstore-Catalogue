@@ -7,6 +7,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/src/shared/components';
+import { useTranslations } from 'next-intl';
 
 type BookPaginationProps = {
   currentPage: number;
@@ -15,17 +16,23 @@ type BookPaginationProps = {
 };
 
 function BookPagination({ currentPage, totalPages, buildPageHref }: BookPaginationProps) {
+  const t = useTranslations('pagination');
+
   if (totalPages <= 1) {
     return null;
   }
 
   return (
     <section className="pt-2">
-      <Pagination>
+      <Pagination aria-label={t('ariaLabel')}>
         <PaginationContent>
           {currentPage > 1 && (
             <PaginationItem>
-              <PaginationPrevious href={buildPageHref(currentPage - 1)} />
+              <PaginationPrevious
+                href={buildPageHref(currentPage - 1)}
+                text={t('previous')}
+                aria-label={t('previousAriaLabel')}
+              />
             </PaginationItem>
           )}
           {totalPages <= 5 ? (
@@ -44,7 +51,6 @@ function BookPagination({ currentPage, totalPages, buildPageHref }: BookPaginati
                     {page}
                   </PaginationLink>
                 </PaginationItem>
-
               ))}
               <PaginationItem>
                 <PaginationEllipsis />
@@ -55,15 +61,17 @@ function BookPagination({ currentPage, totalPages, buildPageHref }: BookPaginati
                     {page}
                   </PaginationLink>
                 </PaginationItem>
-
               ))}
-
             </>
           )}
 
           {currentPage < totalPages && (
             <PaginationItem>
-              <PaginationNext href={buildPageHref(currentPage + 1)} />
+              <PaginationNext
+                href={buildPageHref(currentPage + 1)}
+                text={t('next')}
+                aria-label={t('nextAriaLabel')}
+              />
             </PaginationItem>
           )}
         </PaginationContent>

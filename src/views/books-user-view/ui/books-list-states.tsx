@@ -8,8 +8,11 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/src/shared/components';
+import { useTranslations } from 'next-intl';
 
 function BooksListEmptyState({ hasFilters }: { hasFilters: boolean }) {
+  const t = useTranslations('booksListView.emptyState');
+
   return (
     <Empty className="min-h-72">
       <EmptyHeader>
@@ -17,14 +20,12 @@ function BooksListEmptyState({ hasFilters }: { hasFilters: boolean }) {
           <SearchX className="size-5" />
         </EmptyMedia>
         <EmptyTitle>
-          {hasFilters ? 'No books match your filters' : 'No books available yet'}
+          {hasFilters ? t('noMatchingTitle') : t('noAvailableTitle')}
         </EmptyTitle>
       </EmptyHeader>
       <EmptyContent>
         <EmptyDescription>
-          {hasFilters
-            ? 'Try clearing one or more filters to see all books again.'
-            : 'New books will appear here once they are added to the catalogue.'}
+          {hasFilters ? t('noMatchingDescription') : t('noAvailableDescription')}
         </EmptyDescription>
       </EmptyContent>
     </Empty>
@@ -32,13 +33,15 @@ function BooksListEmptyState({ hasFilters }: { hasFilters: boolean }) {
 }
 
 function BooksListErrorState({ error }: { error: string }) {
+  const t = useTranslations('booksListView.errorState');
+
   return (
     <Empty className="min-h-72">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <AlertCircle className="size-5" />
         </EmptyMedia>
-        <EmptyTitle>Something went wrong</EmptyTitle>
+        <EmptyTitle>{t('title')}</EmptyTitle>
       </EmptyHeader>
       <EmptyContent>
         <EmptyDescription>{error}</EmptyDescription>
