@@ -10,4 +10,4 @@ export {
   updateBookSchema,
 } from './model';
 
-export { formatPrice } from './lib';
+export { formatPrice, compressImage } from './lib';
