@@ -1,6 +1,12 @@
 import { z } from 'zod';
 import { LANGUAGES } from './constants';
 
+const imageFileSchema = z
+  .instanceof(File)
+  .refine((file) => file.size > 0 && file.type.startsWith('image/'), {
+    message: 'Cover file must be an image',
+  });
+
 export const bookSchema = z.object({
   title: z.string().trim().min(1, 'Title is required'),
   author: z.string().trim().nullable().optional(),
@@ -23,10 +29,10 @@ export const addBookSchema = bookSchema
     category: true,
   })
   .extend({
-    cover_file: z.instanceof(File).optional(),
+    cover_file: imageFileSchema.optional(),
   });
 
 export const updateBookSchema = bookSchema.partial().extend({
-  cover_file: z.instanceof(File).optional(),
+  cover_file: imageFileSchema.optional(),
   remove_cover: z.boolean().optional(),
 });

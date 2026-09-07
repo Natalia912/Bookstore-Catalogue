@@ -1,7 +1,12 @@
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { addBookSchema, type CreateBookInput, languageOptions } from '@/src/entities/book';
+import {
+  addBookSchema,
+  compressImage,
+  type CreateBookInput,
+  languageOptions,
+} from '@/src/entities/book';
 
 import { addBook } from '../api';
 import { toast } from 'sonner';
@@ -28,7 +33,13 @@ export const useAddBook = () => {
   async function onSubmit(data: CreateBookInput) {
     const t = toast.loading('Saving book...');
 
-    const result = await addBook(data);
+    const payload = { ...data };
+
+    if (payload.cover_file) {
+      payload.cover_file = await compressImage(payload.cover_file);
+    }
+
+    const result = await addBook(payload);
 
     if (result.success) {
       reset();

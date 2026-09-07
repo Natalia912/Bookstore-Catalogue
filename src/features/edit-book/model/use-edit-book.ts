@@ -7,6 +7,7 @@ import {
   type UpdateBookInput,
   updateBookSchema,
   languageOptions,
+  compressImage,
 } from '@/src/entities/book';
 
 import { editBook } from '../api';
@@ -101,6 +102,10 @@ export const useEditBook = ({ book, id }: UseEditBookOptions) => {
 
     if (isCoverRemoved && !coverFile) {
       payload.remove_cover = true;
+    }
+
+    if (payload.cover_file) {
+      payload.cover_file = await compressImage(payload.cover_file);
     }
 
     const result = await editBook(id, payload);
