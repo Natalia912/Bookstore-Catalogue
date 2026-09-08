@@ -34,7 +34,7 @@ export function LanguageSwitcher() {
       onValueChange={(val) => handleValueChange(val as string | null)}
       disabled={isPending}
     >
-      <SelectTrigger className="w-[140px]">
+      <SelectTrigger className="w-35" aria-label={t('placeholder')}>
         <SelectValue placeholder={t('placeholder')}>
           {selectedOption?.label ?? currentLocale}
         </SelectValue>
