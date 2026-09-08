@@ -7,6 +7,7 @@ import { buildAdminDashboardPageHref, type AdminDashboardQueryParams } from '../
 import { PriceRange } from '@/src/shared/types';
 import Link from 'next/link';
 import { PropsWithChildren } from 'react';
+import { ArrowLeft } from 'lucide-react';
 
 type MainPageContentProps = {
   searchParams: AdminDashboardQueryParams;
@@ -28,6 +29,12 @@ export function MainPageContent({
 }: MainPageContentProps & PropsWithChildren) {
   return (
     <main className="mx-auto flex w-full max-w-300 flex-col gap-4 px-4 py-4 lg:gap-6">
+      <Link href="/" className="self-start">
+        <Button variant="outline" size="sm">
+          <ArrowLeft />
+          Back to the Catalogue
+        </Button>
+      </Link>
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <h1 className="text-4xl font-semibold tracking-tight">Current catalogue</h1>
