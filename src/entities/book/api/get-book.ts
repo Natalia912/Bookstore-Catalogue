@@ -3,7 +3,11 @@ import { createAuthServerClient } from '@/src/shared/configs/index.server';
 export const getBook = async (id: string) => {
   const supabase = await createAuthServerClient();
 
-  const { data, error } = await supabase.from('books').select('*').eq('id', id).single();
+  const { data, error } = await supabase
+    .from('books')
+    .select('*, genre:genres(*)')
+    .eq('id', id)
+    .single();
   if (error) {
     return { data: null, error };
   }

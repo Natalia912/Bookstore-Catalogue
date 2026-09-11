@@ -3,6 +3,7 @@ export {
   languageOptions,
   type Language,
   type Book,
+  type BookGenre,
   type CreateBookInput,
   type UpdateBookInput,
   bookSchema,

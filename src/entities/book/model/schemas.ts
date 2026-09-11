@@ -8,6 +8,7 @@ const imageFileSchema = z
   });
 
 export const bookSchema = z.object({
+  id: z.uuid(),
   title: z.string().trim().min(1, 'Title is required'),
   author: z.string().trim().nullable().optional(),
   language: z.enum(Object.values(LANGUAGES)).default(LANGUAGES.ru),
@@ -15,18 +16,13 @@ export const bookSchema = z.object({
   quantity: z.number().int().nonnegative().default(1),
   isbn: z.string().trim().nullable().optional(),
   cover_url: z.url().nullable().optional(),
-  category: z.string().trim().nullable().optional(),
+  genre_id: z.number().int().positive().nullable().optional(),
 });
 
 export const addBookSchema = bookSchema
-  .pick({
-    title: true,
-    author: true,
-    language: true,
-    price: true,
-    quantity: true,
-    isbn: true,
-    category: true,
+  .omit({
+    id: true,
+    cover_url: true,
   })
   .extend({
     cover_file: imageFileSchema.optional(),

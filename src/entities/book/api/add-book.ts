@@ -27,7 +27,7 @@ export const addBook = async (input: CreateBookInput) => {
       quantity: input.quantity ? parseInt(String(input.quantity)) : 1,
       isbn: input.isbn || null,
       cover_url: coverUrl,
-      category: input.category || null,
+      genre_id: input.genre_id || null,
     })
     .select()
     .single();

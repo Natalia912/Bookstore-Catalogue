@@ -1,5 +1,7 @@
 import { EditBookForm } from '@/src/features/edit-book';
 import { getBook } from '@/src/entities/book/index.server';
+import { getGenres } from '@/src/entities/genres/index.server';
+import type { Genre } from '@/src/entities/genres';
 import Link from 'next/link';
 import { Button } from '@/src/shared/components';
 import { ArrowLeft } from 'lucide-react';
@@ -10,7 +12,7 @@ interface EditBookViewProps {
 }
 
 export async function EditBookView({ id }: EditBookViewProps) {
-  const { data: book, error } = await getBook(id);
+  const [{ data: book, error }, { data: genres }] = await Promise.all([getBook(id), getGenres()]);
 
   if (error || !book) {
     notFound();
@@ -25,7 +27,7 @@ export async function EditBookView({ id }: EditBookViewProps) {
         </Button>
       </Link>
 
-      <EditBookForm book={book} id={id} />
+      <EditBookForm book={book} id={id} genres={(genres ?? []) as Genre[]} />
     </main>
   );
 }

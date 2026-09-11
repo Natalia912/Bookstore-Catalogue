@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 type SearchParams = Promise<{
   search?: string;
   language?: string;
+  genre?: string;
   minPrice?: string;
   maxPrice?: string;
   page?: string;

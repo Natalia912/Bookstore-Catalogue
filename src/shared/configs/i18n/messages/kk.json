@@ -17,7 +17,8 @@
     "search": {
       "label": "Іздеу",
       "placeholder": "Атауы немесе авторы бойынша іздеу",
-      "clearAriaLabel": "Іздеуді тазалау"
+      "clearAriaLabel": "Іздеуді тазалау",
+      "submit": "Іздеу"
     },
     "language": {
       "placeholder": "Тілді таңдаңыз",
@@ -29,11 +30,16 @@
         "other": "Басқа"
       }
     },
+    "genre": {
+      "placeholder": "Жанрды таңдаңыз",
+      "label": "Жанрлар"
+    },
     "price": {
       "label": "Баға аралығы",
       "description": "Іздеу нәтижелерін тарылту үшін ең төменгі және ең жоғарғы бағаны реттеңіз."
     },
     "toggle": {
+      "label": "Сүзгілер",
       "showAriaLabel": "Сүзгілерді көрсету",
       "hideAriaLabel": "Сүзгілерді жасыру"
     },
@@ -60,7 +66,7 @@
     "inStock": "Қоймада бар ({quantity})",
     "outOfStock": "Қоймада жоқ",
     "languageLabel": "Тіл:",
-    "categoryLabel": "Санат:",
+    "genreLabel": "Жанр:",
     "isbnLabel": "ISBN:",
     "languages": {
       "ru": "Орыс тілі (ru)",
@@ -70,4 +76,3 @@
     }
   }
 }
-

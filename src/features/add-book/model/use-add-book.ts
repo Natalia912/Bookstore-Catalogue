@@ -25,6 +25,7 @@ export const useAddBook = () => {
     defaultValues: {
       language: languageOptions[0].value,
       quantity: 1,
+      genre_id: null,
     },
   });
 

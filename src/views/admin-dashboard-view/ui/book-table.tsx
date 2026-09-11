@@ -14,7 +14,7 @@ import {
 import { DeleteModal } from './delete-modal';
 import { useDeleteBook } from '../model/use-delete';
 
-const headerCells = ['Title', 'Author', 'Language', 'Price', 'Stock', 'ISBN'];
+const headerCells = ['Title', 'Author', 'Language', 'Genre', 'Price', 'Stock', 'ISBN'];
 
 export const BookTable = ({ books }: { books: Book[] }) => {
   const { confirmedDeleteBook } = useDeleteBook();
@@ -37,6 +37,7 @@ export const BookTable = ({ books }: { books: Book[] }) => {
             <TableCell>
               <Badge variant="outline">{book.language}</Badge>
             </TableCell>
+            <TableCell>{book.genre?.label_en ?? '—'}</TableCell>
             <TableCell>{formatPrice(book.price) ?? '—'}</TableCell>
             <TableCell>{book.quantity}</TableCell>
             <TableCell>{book.isbn ?? '—'}</TableCell>

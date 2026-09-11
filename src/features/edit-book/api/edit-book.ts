@@ -17,7 +17,7 @@ export const editBook = async (id: string, input: UpdateBookInput): Promise<ApiR
   if (input.price != null) formData.append('price', String(input.price));
   if (input.quantity != null) formData.append('quantity', String(input.quantity));
   if (input.isbn != null) formData.append('isbn', input.isbn);
-  if (input.category != null) formData.append('category', input.category);
+  if (input.genre_id != null) formData.append('genre_id', String(input.genre_id));
   if (input.cover_file) formData.append('cover_file', input.cover_file);
   if (input.remove_cover) formData.append('remove_cover', 'true');
 

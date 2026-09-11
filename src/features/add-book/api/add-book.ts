@@ -19,7 +19,7 @@ export const addBook = async (book: CreateBookInput): Promise<AddBookResult> => 
   if (book.price != null) formData.append('price', String(book.price));
   formData.append('quantity', String(book.quantity));
   if (book.isbn) formData.append('isbn', book.isbn);
-  if (book.category) formData.append('category', book.category);
+  if (book.genre_id != null) formData.append('genre_id', String(book.genre_id));
   if (book.cover_file) formData.append('cover_file', book.cover_file);
 
   try {

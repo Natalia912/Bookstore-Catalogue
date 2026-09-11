@@ -17,6 +17,8 @@ function useBookFilters(priceBounds?: [number, number] | null) {
   const [draftQuery, setDraftQuery] = useState(() => searchParams?.get('search') ?? '');
 
   const language = (searchParams?.get('language') as Language | null) ?? null;
+  const genreIdValue = Number(searchParams?.get('genre'));
+  const genreId = Number.isInteger(genreIdValue) && genreIdValue > 0 ? genreIdValue : null;
   const fallbackPriceRange = useMemo(
     () => [priceBounds?.[0] ?? DEFAULT_PRICE_RANGE[0], priceBounds?.[1] ?? DEFAULT_PRICE_RANGE[1]],
     [priceBounds]
@@ -49,6 +51,7 @@ function useBookFilters(priceBounds?: [number, number] | null) {
   const syncFilters = (nextValues: {
     search?: string;
     language?: Language | null;
+    genreId?: number | null;
     priceRange?: [number, number];
   }) => {
     const params = new URLSearchParams(searchParams?.toString() ?? '');
@@ -67,6 +70,14 @@ function useBookFilters(priceBounds?: [number, number] | null) {
         params.set('language', nextValues.language);
       } else {
         params.delete('language');
+      }
+    }
+
+    if (nextValues.genreId !== undefined) {
+      if (nextValues.genreId !== null) {
+        params.set('genre', String(nextValues.genreId));
+      } else {
+        params.delete('genre');
       }
     }
 
@@ -104,6 +115,11 @@ function useBookFilters(priceBounds?: [number, number] | null) {
     syncFilters({ language: nextLanguage });
   };
 
+  const handleGenreChange = (nextGenreId: number | null) => {
+    if (nextGenreId === genreId) return;
+    syncFilters({ genreId: nextGenreId });
+  };
+
   const handlePriceRangeChange = (nextPriceRange: [number, number]) => {
     if (nextPriceRange[0] === priceRange[0] && nextPriceRange[1] === priceRange[1]) return;
     setPendingPriceRange(nextPriceRange); // reflect immediately, no flicker
@@ -128,11 +144,13 @@ function useBookFilters(priceBounds?: [number, number] | null) {
   return {
     draftQuery,
     language,
+    genreId,
     priceRange,
     isPending,
     setDraftQuery,
     onSearch: handleSearchChange,
     onLanguageChange: handleLanguageChange,
+    onGenreChange: handleGenreChange,
     onPriceRangeChange: handlePriceRangeChange,
     resetFilters,
   };
