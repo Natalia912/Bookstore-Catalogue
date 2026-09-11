@@ -17,7 +17,8 @@
     "search": {
       "label": "Search",
       "placeholder": "Search for title or author",
-      "clearAriaLabel": "Clear search"
+      "clearAriaLabel": "Clear search",
+      "submit": "Search"
     },
     "language": {
       "placeholder": "Select language",
@@ -29,11 +30,16 @@
         "other": "Other"
       }
     },
+    "genre": {
+      "placeholder": "Select genre",
+      "label": "Genres"
+    },
     "price": {
       "label": "Price range",
       "description": "Adjust the minimum and maximum price to narrow search results."
     },
     "toggle": {
+      "label": "Filters",
       "showAriaLabel": "Show filters",
       "hideAriaLabel": "Hide filters"
     },
@@ -60,7 +66,7 @@
     "inStock": "In Stock ({quantity})",
     "outOfStock": "Out of Stock",
     "languageLabel": "Language:",
-    "categoryLabel": "Category:",
+    "genreLabel": "Genre:",
     "isbnLabel": "ISBN:",
     "languages": {
       "ru": "Russian (ru)",
@@ -70,4 +76,3 @@
     }
   }
 }
-

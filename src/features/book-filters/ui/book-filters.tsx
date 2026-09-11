@@ -4,16 +4,28 @@ import { Search } from './search';
 import { LanguageSelect } from './language-select';
 import { PriceSlider } from './price-slider';
 import { LayoutWrapper } from './layout-wrapper';
+import { GenreSelect } from './genre-select';
 import { useBookFilters } from '../model';
+import type { Genre } from '@/src/entities/genres';
 
-function BookFilters({ priceBounds }: { priceBounds?: [number, number] | null }) {
+function BookFilters({
+  priceBounds,
+  genres,
+  locale = 'en',
+}: {
+  priceBounds?: [number, number] | null;
+  genres: Genre[];
+  locale?: string;
+}) {
   const {
     draftQuery,
     language,
+    genreId,
     priceRange,
     setDraftQuery,
     onSearch,
     onLanguageChange,
+    onGenreChange,
     onPriceRangeChange,
     resetFilters,
     isPending,
@@ -31,8 +43,17 @@ function BookFilters({ priceBounds }: { priceBounds?: [number, number] | null })
           disabled={isPending}
         />
       }
-      select={
+      languageSelect={
         <LanguageSelect language={language} onSelect={onLanguageChange} disabled={isPending} />
+      }
+      genreSelect={
+        <GenreSelect
+          genres={genres}
+          genreId={genreId}
+          locale={locale}
+          onSelect={onGenreChange}
+          disabled={isPending}
+        />
       }
       slider={
         <PriceSlider

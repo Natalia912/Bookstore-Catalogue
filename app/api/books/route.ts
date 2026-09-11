@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     price: formData.get('price') ? Number(formData.get('price')) : null,
     quantity: Number(formData.get('quantity')),
     isbn: formData.get('isbn') || null,
-    category: formData.get('category') || null,
+    genre_id: formData.get('genre_id') ? Number(formData.get('genre_id')) : null,
     cover_file: formData.get('cover_file') instanceof File ? formData.get('cover_file') : undefined,
   };
 
@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
   }
 
   revalidateTag('books', 'max');
+  revalidateTag('genres-with-books', 'max');
 
   return NextResponse.json({ book: data }, { status: 201 });
 }

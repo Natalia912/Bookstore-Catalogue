@@ -30,7 +30,7 @@ export const useEditBook = ({ book, id }: UseEditBookOptions) => {
       price: book.price ?? undefined,
       quantity: book.quantity ?? 1,
       isbn: book.isbn ?? '',
-      category: book.category ?? undefined,
+      genre_id: book.genre_id ?? null,
     }),
     [book]
   );

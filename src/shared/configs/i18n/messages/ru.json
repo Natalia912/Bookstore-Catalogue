@@ -17,7 +17,8 @@
     "search": {
       "label": "Поиск",
       "placeholder": "Поиск по названию или автору",
-      "clearAriaLabel": "Очистить поиск"
+      "clearAriaLabel": "Очистить поиск",
+      "submit": "Поиск"
     },
     "language": {
       "placeholder": "Выберите язык",
@@ -29,11 +30,16 @@
         "other": "Другой"
       }
     },
+    "genre": {
+      "placeholder": "Выберите жанр",
+      "label": "Жанры"
+    },
     "price": {
       "label": "Диапазон цен",
       "description": "Настройте минимальную и максимальную цену, чтобы сузить результаты поиска."
     },
     "toggle": {
+      "label": "Фильтры",
       "showAriaLabel": "Показать фильтры",
       "hideAriaLabel": "Скрыть фильтры"
     },
@@ -60,7 +66,7 @@
     "inStock": "В наличии ({quantity})",
     "outOfStock": "Нет в наличии",
     "languageLabel": "Язык:",
-    "categoryLabel": "Категория:",
+    "genreLabel": "Жанр:",
     "isbnLabel": "ISBN:",
     "languages": {
       "ru": "Русский (ru)",
@@ -70,4 +76,3 @@
     }
   }
 }
-

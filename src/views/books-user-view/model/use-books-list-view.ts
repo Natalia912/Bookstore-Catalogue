@@ -4,6 +4,7 @@ import { BOOKS_PAGE_SIZE } from './constants';
 type BooksListQueryParams = {
   search?: string;
   language?: string;
+  genre?: string;
   minPrice?: string;
   maxPrice?: string;
   page?: string;
@@ -12,6 +13,7 @@ type BooksListQueryParams = {
 type UseBooksListViewResult = {
   search: string | null;
   language: string | null;
+  genreId: number | null;
   currentPage: number;
   pageSize: number;
   priceRange: PriceRange | null;
@@ -23,6 +25,8 @@ type UseBooksListViewResult = {
 function useBooksListView(searchParams?: BooksListQueryParams): UseBooksListViewResult {
   const search = searchParams?.search?.trim() ?? null;
   const language = searchParams?.language?.trim() ?? null;
+  const parsedGenreId = Number(searchParams?.genre);
+  const genreId = Number.isInteger(parsedGenreId) && parsedGenreId > 0 ? parsedGenreId : null;
   const minPrice = Number(searchParams?.minPrice ?? 0);
   const maxPrice = Number(searchParams?.maxPrice ?? 100);
   const currentPage = Math.max(1, Number(searchParams?.page ?? 1));
@@ -31,16 +35,17 @@ function useBooksListView(searchParams?: BooksListQueryParams): UseBooksListView
   const hasPriceFilter = Boolean(searchParams?.minPrice || searchParams?.maxPrice);
   const priceRange = hasPriceFilter
     ? ([Number.isFinite(minPrice) ? minPrice : 0, Number.isFinite(maxPrice) ? maxPrice : 100] as [
-      number,
-      number,
-    ])
+        number,
+        number,
+      ])
     : null;
 
-  const hasActiveFilters = Boolean(search || language || priceRange);
+  const hasActiveFilters = Boolean(search || language || genreId || priceRange);
 
   const filtersKey = [
     search ?? '',
     language ?? '',
+    genreId ?? '',
     priceRange?.[0] ?? '',
     priceRange?.[1] ?? '',
     currentPage,
@@ -55,6 +60,10 @@ function useBooksListView(searchParams?: BooksListQueryParams): UseBooksListView
 
     if (language) {
       query.set('language', language);
+    }
+
+    if (genreId) {
+      query.set('genre', String(genreId));
     }
 
     if (priceRange) {
@@ -73,6 +82,7 @@ function useBooksListView(searchParams?: BooksListQueryParams): UseBooksListView
   return {
     search,
     language,
+    genreId,
     currentPage,
     pageSize,
     priceRange,

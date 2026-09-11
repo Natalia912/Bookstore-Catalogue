@@ -3,6 +3,7 @@
 import { Controller } from 'react-hook-form';
 
 import { type CreateBookInput, languageOptions } from '@/src/entities/book';
+import type { Genre } from '@/src/entities/genres';
 import {
   Button,
   Field,
@@ -20,7 +21,11 @@ import {
 import { useAddBook } from '../model/use-add-book';
 import Image from 'next/image';
 
-export function AddBookForm() {
+type AddBookFormProps = {
+  genres: Genre[];
+};
+
+export function AddBookForm({ genres }: AddBookFormProps) {
   const { register, handleSubmit, errors, isSubmitting, control, onSubmit, coverFile, setValue } =
     useAddBook();
 
@@ -97,12 +102,6 @@ export function AddBookForm() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field>
-          <FieldLabel htmlFor="isbn">ISBN</FieldLabel>
-          <Input {...register('isbn')} id="isbn" placeholder="978-0-123456-78-9" />
-          <FieldError>{errors.isbn?.message}</FieldError>
-        </Field>
-
-        <Field>
           <FieldLabel htmlFor="language">Language</FieldLabel>
           <Controller
             name="language"
@@ -133,6 +132,39 @@ export function AddBookForm() {
           />
           <FieldError>{errors.language?.message}</FieldError>
         </Field>
+
+        <Field>
+          <FieldLabel htmlFor="genre_id">Genre</FieldLabel>
+          <Controller
+            name="genre_id"
+            control={control}
+            render={({ field }) => {
+              const selectedGenre = genres.find((genre) => genre.id === field.value);
+
+              return (
+                <Select
+                  value={field.value == null ? '__none__' : String(field.value)}
+                  onValueChange={(value) =>
+                    field.onChange(value === '__none__' ? null : Number(value))
+                  }
+                >
+                  <SelectTrigger id="genre_id" className="w-full">
+                    <span>{selectedGenre?.label_en ?? 'Select a genre'}</span>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__none__">No genre</SelectItem>
+                    {genres.map((genre) => (
+                      <SelectItem key={genre.id} value={String(genre.id)}>
+                        {genre.label_en}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              );
+            }}
+          />
+          <FieldError>{errors.genre_id?.message}</FieldError>
+        </Field>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -159,6 +191,12 @@ export function AddBookForm() {
           <FieldError>{errors.quantity?.message}</FieldError>
         </Field>
       </div>
+
+      <Field>
+        <FieldLabel htmlFor="isbn">ISBN</FieldLabel>
+        <Input {...register('isbn')} id="isbn" placeholder="978-0-123456-78-9" />
+        <FieldError>{errors.isbn?.message}</FieldError>
+      </Field>
 
       {errors.root && <p className="text-sm text-red-600">{errors.root.message}</p>}
 

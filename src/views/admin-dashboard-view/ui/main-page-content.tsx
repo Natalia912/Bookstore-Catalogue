@@ -8,6 +8,7 @@ import { PriceRange } from '@/src/shared/types';
 import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 import { ArrowLeft } from 'lucide-react';
+import type { Genre } from '@/src/entities/genres';
 
 type MainPageContentProps = {
   searchParams: AdminDashboardQueryParams;
@@ -16,6 +17,7 @@ type MainPageContentProps = {
   totalPages: number;
   hasActiveFilters: boolean;
   isEmpty: boolean;
+  genres: Genre[];
 };
 
 export function MainPageContent({
@@ -25,6 +27,7 @@ export function MainPageContent({
   totalPages,
   hasActiveFilters,
   isEmpty,
+  genres,
   children,
 }: MainPageContentProps & PropsWithChildren) {
   return (
@@ -48,7 +51,7 @@ export function MainPageContent({
       </header>
 
       <section>
-        <BookFilters priceBounds={priceBounds} />
+        <BookFilters priceBounds={priceBounds} genres={genres} />
       </section>
 
       {isEmpty ? (

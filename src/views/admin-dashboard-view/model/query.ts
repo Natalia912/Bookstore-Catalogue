@@ -3,6 +3,7 @@ import type { PriceRange } from '@/src/shared/types';
 export type AdminDashboardQueryParams = {
   search?: string;
   language?: string;
+  genre?: string;
   minPrice?: string;
   maxPrice?: string;
   page?: string;
@@ -11,6 +12,7 @@ export type AdminDashboardQueryParams = {
 export type NormalizedAdminDashboardQuery = {
   search: string | null;
   language: string | null;
+  genreId: number | null;
   currentPage: number;
   priceRange: PriceRange | null;
   hasActiveFilters: boolean;
@@ -21,6 +23,8 @@ export function normalizeAdminDashboardQuery(
 ): NormalizedAdminDashboardQuery {
   const search = searchParams?.search?.trim() ?? null;
   const language = searchParams?.language?.trim() ?? null;
+  const parsedGenreId = Number(searchParams?.genre);
+  const genreId = Number.isInteger(parsedGenreId) && parsedGenreId > 0 ? parsedGenreId : null;
   const currentPage = Math.max(1, Number(searchParams?.page ?? 1));
 
   const minPrice = Number(searchParams?.minPrice ?? 0);
@@ -38,7 +42,8 @@ export function normalizeAdminDashboardQuery(
     language,
     currentPage,
     priceRange,
-    hasActiveFilters: Boolean(search || language || priceRange),
+    genreId,
+    hasActiveFilters: Boolean(search || language || genreId || priceRange),
   };
 }
 
@@ -55,6 +60,10 @@ export function buildAdminDashboardPageHref(
 
   if (normalized.language) {
     params.set('language', normalized.language);
+  }
+
+  if (normalized.genreId) {
+    params.set('genre', String(normalized.genreId));
   }
 
   if (normalized.priceRange) {

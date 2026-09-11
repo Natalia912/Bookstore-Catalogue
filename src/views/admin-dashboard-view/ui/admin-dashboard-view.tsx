@@ -7,6 +7,7 @@ import { getBooksPriceBounds, getBooks } from '@/src/entities/book/index.server'
 import { BooksErrorState } from './books-error-state';
 import { BOOKS_PAGE_SIZE } from '../model/constants';
 import { BookTable } from './book-table';
+import { getGenresWithBooks } from '@/src/entities/genres/index.server';
 type AdminDashboardViewProps = {
   searchParams: AdminDashboardQueryParams;
 };
@@ -21,10 +22,12 @@ async function AdminDashboardView({ searchParams }: AdminDashboardViewProps) {
 
   const priceBoundsResult = await getBooksPriceBounds();
   const priceBounds = priceBoundsResult.success ? priceBoundsResult.data : null;
+  const { data: genres } = await getGenresWithBooks();
 
   const booksResult = await getBooks({
     search: normalized.search,
     language: normalized.language,
+    genreId: normalized.genreId,
     priceRange: normalized.priceRange,
     page: normalized.currentPage,
     pageSize: BOOKS_PAGE_SIZE,
@@ -47,6 +50,7 @@ async function AdminDashboardView({ searchParams }: AdminDashboardViewProps) {
       currentPage={normalized.currentPage}
       totalPages={booksResult.pagination.totalPages}
       hasActiveFilters={hasActiveFilters}
+      genres={genres ?? []}
     >
       <BookTable books={booksResult.data} />
     </MainPageContent>

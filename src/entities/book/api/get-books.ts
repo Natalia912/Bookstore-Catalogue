@@ -15,6 +15,7 @@ type GetBooksResult =
 export const getBooks = async ({
   search,
   language,
+  genreId,
   priceRange,
   onlyInStock = false,
   page = 1,
@@ -22,6 +23,7 @@ export const getBooks = async ({
 }: {
   search: string | null;
   language: string | null;
+  genreId?: number | null;
   priceRange?: PriceRange | null;
   onlyInStock?: boolean;
   page?: number | null;
@@ -43,6 +45,10 @@ export const getBooks = async ({
 
     if (language) {
       countQuery = countQuery.eq('language', language);
+    }
+
+    if (genreId) {
+      countQuery = countQuery.eq('genre_id', genreId);
     }
 
     if (priceRange?.[0] !== undefined && priceRange?.[0] !== null) {
@@ -68,13 +74,20 @@ export const getBooks = async ({
     const safePage = Math.min(normalizedPage, totalPages);
     const from = (safePage - 1) * normalizedPageSize;
 
-    let dataQuery = supabase.from('books').select('*').order('created_at', { ascending: false });
+    let dataQuery = supabase
+      .from('books')
+      .select('*, genre:genres(*)')
+      .order('created_at', { ascending: false });
     if (search) {
       dataQuery = dataQuery.or(`title.ilike.%${search}%,author.ilike.%${search}%`);
     }
 
     if (language) {
       dataQuery = dataQuery.eq('language', language);
+    }
+
+    if (genreId) {
+      dataQuery = dataQuery.eq('genre_id', genreId);
     }
 
     if (priceRange?.[0] !== undefined && priceRange?.[0] !== null) {

@@ -9,13 +9,16 @@ import { getBooks } from '@/src/entities/book/index.server';
 import { BookFilters } from '@/src/features/book-filters';
 import { BookPagination } from '@/src/features/book-pagination';
 import { useBooksListView } from '../model/use-books-list-view';
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { LanguageSwitcher } from '@/src/features/language-switcher';
+import { getGenresWithBooks } from '@/src/entities/genres/index.server';
+import type { Genre } from '@/src/entities/genres';
 
 type BooksListViewProps = {
   searchParams?: {
     search?: string;
     language?: string;
+    genre?: string;
     minPrice?: string;
     maxPrice?: string;
     page?: string;
@@ -31,6 +34,8 @@ async function BooksListShell({
   children: ReactNode;
 }) {
   const t = await getTranslations('homepage');
+  const locale = await getLocale();
+  const { data: genres } = await getGenresWithBooks();
   return (
     <main className="mx-auto flex w-full max-w-300 flex-col gap-4 px-4 py-4 lg:gap-6">
       <div className="flex w-full items-center justify-between">
@@ -39,7 +44,11 @@ async function BooksListShell({
       </div>
       <section>
         <Suspense fallback={null}>
-          <BookFilters priceBounds={priceBounds} />
+          <BookFilters
+            priceBounds={priceBounds}
+            genres={(genres ?? []) as Genre[]}
+            locale={locale}
+          />
         </Suspense>
       </section>
       <Suspense fallback={<BooksListLoadingState />}>{children}</Suspense>
@@ -51,6 +60,7 @@ function BooksListView({ searchParams, priceBounds }: BooksListViewProps) {
   const {
     search,
     language,
+    genreId,
     currentPage,
     pageSize,
     priceRange,
@@ -63,6 +73,7 @@ function BooksListView({ searchParams, priceBounds }: BooksListViewProps) {
     getBooks({
       search,
       language,
+      genreId,
       priceRange,
       page: currentPage,
       pageSize,
