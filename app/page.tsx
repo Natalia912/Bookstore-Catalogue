@@ -1,11 +1,14 @@
 import { BooksListView } from '@/src/views/books-user-view';
-import { getBooksPriceBounds } from '@/src/views/books-user-view';
+import { getBooksPriceBounds } from '@/src/entities/book/index.server';
+import { NextIntlClientProvider } from 'next-intl';
 
 type SearchParams = Promise<{
   search?: string;
   language?: string;
+  genre?: string;
   minPrice?: string;
   maxPrice?: string;
+  page?: string;
 }>;
 
 export default async function Home({ searchParams }: { searchParams: SearchParams }) {
@@ -13,5 +16,9 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
   const priceBoundsResult = await getBooksPriceBounds();
   const priceBounds = priceBoundsResult.success ? priceBoundsResult.data : null;
 
-  return <BooksListView searchParams={resolvedSearchParams} priceBounds={priceBounds} />;
+  return (
+    <NextIntlClientProvider>
+      <BooksListView searchParams={resolvedSearchParams} priceBounds={priceBounds} />
+    </NextIntlClientProvider>
+  );
 }

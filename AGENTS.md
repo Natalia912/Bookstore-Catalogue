@@ -2,7 +2,10 @@
 
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->
 
 # Project Agent Guide
@@ -87,7 +90,21 @@ Refer to `.agents/skills/feature-sliced-design` for more info about the rules an
 
 ## Important project-specific notes
 
-- The project uses shadcn/ui components (installed as needed) and lives under `src/shared/components`
+- The project uses shadcn/ui components (installed as needed) and lives under `src/shared/components`. Use the shadcn components where possible. Only default to custom components, if no shadcn/ui components available.
 - The current app already uses `sonner` for toasts, `zod` for validation, and `react-hook-form` for forms
 - Cloudflare deployment is part of the workflow, so changes that affect build/runtime behavior should be tested with the relevant preview/deploy scripts
 - Because this project uses a newer Next.js release, be cautious with framework conventions and consult the local Next.js docs when unsure
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked as markdown files under .scratch/. See docs/agents/issue-tracker.md.
+
+### Triage labels
+
+Uses the default triage labels: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See docs/agents/triage-labels.md.
+
+### Domain docs
+
+Single-context repo: root CONTEXT.md plus docs/adr/. See docs/agents/domain.md.

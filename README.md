@@ -12,14 +12,13 @@ The app is intentionally scoped to a small catalogue use case:
 
 - Public users can browse the catalogue without authentication.
 - Users can search by title and author.
-- Users can narrow results by language and price range.
+- Users can narrow results by language, genre, and price range.
 - The catalogue is designed to display a minimal set of book information instead of a full commerce experience.
 
 The admin side supports operational tasks for the catalogue data:
 
-- Manage current book catalogue (edit/delete) with search and filter options for quicker book identification.
+- Manage current book catalogue with search and filter options for quicker book identification.
 - Add new books or edit existing books manually through a form.
-- Quick new book form fill with ISBN search.
 
 ## Current Features
 
@@ -27,9 +26,8 @@ The current app is a minimal catalogue with a user view and a lightweight admin 
 
 - Responsive book grid/list UI.
 - Search input that filters catalogue results.
-- Language filter and price range filter controls.
-- Price bound fetching for correctly sized filter UI.
-- Form-based add-book workflow using React Hook Form and Zod validation.
+- Language filter, genres, and price range filter controls.
+- Form-based add-book and edit workflows using React Hook Form and Zod validation.
 - Supabase-backed data access layer with Next.js server-side integration.
 
 ## Tech Stack
@@ -70,9 +68,3 @@ npm run preview
 npm run deploy
 ```
 
-## Roadmap
-
-Near-term priorities for this project include:
-
-1. Completing the admin CRUD flow for create, read, update and delete of catalogue records.
-2. Adding a proper ISBN search workflow with optional external enrichment.

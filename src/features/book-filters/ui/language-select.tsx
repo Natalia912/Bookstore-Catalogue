@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
+import { useSafeTranslations } from '@/src/shared/configs/i18n';
 import { Language, languageOptions } from '@/src/entities/book';
 import {
   Select,
@@ -15,10 +16,13 @@ import {
 function LanguageSelect({
   language,
   onSelect,
+  disabled,
 }: {
   language: Language | null;
   onSelect: (lang: Language | null) => void;
+  disabled?: boolean;
 }) {
+  const t = useSafeTranslations('bookFilters.language');
   const [localLanguage, setLocalLanguage] = useState<Language | null>(language);
 
   const [prevLanguage, setPrevLanguage] = useState(language);
@@ -38,16 +42,21 @@ function LanguageSelect({
   );
 
   return (
-    <Select items={languageOptions} value={localLanguage} onValueChange={handleValueChange}>
+    <Select
+      disabled={disabled}
+      items={languageOptions}
+      value={localLanguage}
+      onValueChange={handleValueChange}
+    >
       <SelectTrigger className="w-full">
-        <SelectValue placeholder="Select language" />
+        <SelectValue placeholder={t('placeholder')} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>Languages</SelectLabel>
+          <SelectLabel>{t('label')}</SelectLabel>
           {languageOptions.map((item) => (
             <SelectItem key={item.value} value={item.value}>
-              {item.label}
+              {t(`options.${item.value}`)}
             </SelectItem>
           ))}
         </SelectGroup>

@@ -1,30 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
+import { useSafeTranslations } from '@/src/shared/configs/i18n';
 import { Field, FieldDescription, FieldLabel, Slider } from '@/src/shared/components';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function useDebouncedCallback<T extends (...args: any[]) => void>(callback: T, delay: number) {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const callbackRef = useRef(callback);
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
-  return useCallback(
-    (...args: Parameters<T>) => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => callbackRef.current(...args), delay);
-    },
-    [delay]
-  );
-}
+import { PriceRange } from '@/src/shared/types';
 
 function PriceSlider({
   min = 0,
@@ -32,58 +11,58 @@ function PriceSlider({
   step = 1,
   value,
   onChange,
-  debounceMs = 400,
+  disabled,
 }: {
   min?: number;
   max?: number;
   step?: number;
-  value?: [number, number];
-  onChange?: (value: [number, number]) => void;
-  debounceMs?: number;
-} = {}) {
+  disabled?: boolean;
+  value: PriceRange;
+  onChange: (value: PriceRange) => void;
+}) {
+  const t = useSafeTranslations('bookFilters.price');
   const labelId = useId();
   const descriptionId = useId();
 
-  const [localValue, setLocalValue] = useState<[number, number]>(value ?? [min, max]);
+  const [localValue, setLocalValue] = useState<PriceRange>(value ?? [min, max]);
+
+  const [currentMin, currentMax] = localValue;
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (value) setLocalValue(value);
+    setLocalValue(value);
   }, [value]);
 
-  const debouncedOnChange = useDebouncedCallback((next: [number, number]) => {
+  const handleValueChange = (next: [number, number]) => {
+    setLocalValue(next);
+  };
+
+  const handleValueCommit = (next: [number, number]) => {
     onChange?.(next);
-  }, debounceMs);
-
-  const handleValueChange = useCallback(
-    (next: [number, number]) => {
-      setLocalValue(next);
-      debouncedOnChange(next);
-    },
-    [debouncedOnChange]
-  );
-
-  const [currentMin, currentMax] = localValue;
+  };
 
   return (
     <Field className="space-y-1">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <FieldLabel htmlFor={labelId} className="text-sm font-medium">
-          Price range
+          {t('label')}
         </FieldLabel>
       </div>
       <FieldDescription id={descriptionId} className="sr-only">
-        Adjust the minimum and maximum price to narrow search results.
+        {t('description')}
       </FieldDescription>
       <Slider
         id={labelId}
         aria-labelledby={labelId}
         aria-describedby={descriptionId}
         value={localValue}
+
         onValueChange={(next) => handleValueChange(next as [number, number])}
+        onValueCommitted={(next) => handleValueCommit(next as [number, number])}
         min={min}
         max={max}
         step={step}
+        disabled={disabled}
       />
       <div className="text-muted-foreground flex items-center justify-between text-sm">
         <span>{currentMin}₸</span>

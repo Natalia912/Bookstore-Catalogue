@@ -3,9 +3,12 @@ export {
   languageOptions,
   type Language,
   type Book,
+  type BookGenre,
   type CreateBookInput,
+  type UpdateBookInput,
   bookSchema,
+  addBookSchema,
   updateBookSchema,
 } from './model';
 
-export { formatPrice } from './lib';
+export { formatPrice, compressImage } from './lib';

@@ -1,0 +1,134 @@
+import { Book } from '@/src/entities/book';
+import { createPublicClient } from '@/src/shared/configs/index.server';
+import type { PriceRange } from '@/src/shared/types';
+
+type PaginationMeta = {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+};
+
+type GetBooksResult =
+  { success: true; data: Book[]; pagination: PaginationMeta } | { success: false; error: string };
+
+export const getBooks = async ({
+  search,
+  language,
+  genreId,
+  priceRange,
+  onlyInStock = false,
+  page = 1,
+  pageSize = 20,
+}: {
+  search: string | null;
+  language: string | null;
+  genreId?: number | null;
+  priceRange?: PriceRange | null;
+  onlyInStock?: boolean;
+  page?: number | null;
+  pageSize?: number;
+}): Promise<GetBooksResult> => {
+  try {
+    const supabase = createPublicClient();
+    const normalizedPage = Number.isFinite(Number(page)) ? Math.max(1, Number(page)) : 1;
+    const normalizedPageSize = Number.isFinite(pageSize) ? Math.max(1, Number(pageSize)) : 8;
+
+    let countQuery = supabase
+      .from('books')
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false });
+
+    if (search) {
+      countQuery = countQuery.or(`title.ilike.%${search}%,author.ilike.%${search}%`);
+    }
+
+    if (language) {
+      countQuery = countQuery.eq('language', language);
+    }
+
+    if (genreId) {
+      countQuery = countQuery.eq('genre_id', genreId);
+    }
+
+    if (priceRange?.[0] !== undefined && priceRange?.[0] !== null) {
+      countQuery = countQuery.gte('price', priceRange[0]);
+    }
+
+    if (priceRange?.[1] !== undefined && priceRange?.[1] !== null) {
+      countQuery = countQuery.lte('price', priceRange[1]);
+    }
+
+    if (onlyInStock) {
+      countQuery = countQuery.gt('quantity', 0);
+    }
+
+    const { count, error: countError } = await countQuery;
+
+    if (countError) {
+      return { success: false, error: countError.message };
+    }
+
+    const total = count ?? 0;
+    const totalPages = Math.max(1, Math.ceil(total / normalizedPageSize));
+    const safePage = Math.min(normalizedPage, totalPages);
+    const from = (safePage - 1) * normalizedPageSize;
+
+    let dataQuery = supabase
+      .from('books')
+      .select('*, genre:genres(*)')
+      .order('created_at', { ascending: false });
+    if (search) {
+      dataQuery = dataQuery.or(`title.ilike.%${search}%,author.ilike.%${search}%`);
+    }
+
+    if (language) {
+      dataQuery = dataQuery.eq('language', language);
+    }
+
+    if (genreId) {
+      dataQuery = dataQuery.eq('genre_id', genreId);
+    }
+
+    if (priceRange?.[0] !== undefined && priceRange?.[0] !== null) {
+      dataQuery = dataQuery.gte('price', priceRange[0]);
+    }
+
+    if (priceRange?.[1] !== undefined && priceRange?.[1] !== null) {
+      dataQuery = dataQuery.lte('price', priceRange[1]);
+    }
+
+    if (onlyInStock) {
+      dataQuery = dataQuery.gt('quantity', 0);
+    }
+
+    const { data, error } = await dataQuery.range(from, from + normalizedPageSize - 1);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    const dataWithPublicUrls = data?.map((book) => ({
+      ...book,
+      cover_url: book.cover_url?.startsWith('covers/')
+        ? supabase.storage.from('covers').getPublicUrl(book.cover_url).data.publicUrl
+        : book.cover_url,
+    }));
+
+    return {
+      success: true,
+      data: dataWithPublicUrls ?? [],
+      pagination: {
+        page: safePage,
+        pageSize: normalizedPageSize,
+        total,
+        totalPages,
+      },
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Network error. Please try again.',
+    };
+  }
+};
